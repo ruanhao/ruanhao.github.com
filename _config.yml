@@ -7,7 +7,8 @@ title: Hao Ruan's Blog
 subtitle: Oh No, Stackoverflow Again ...
 author: Hao Ruan
 simple_search: https://www.google.com/search
-description:
+keywords: linux, emacs, shell, erlang, python, java
+description: hacker blog about technology and life
 
 # Default date format is "ordinal" (resulting in "July 22nd 2007")
 # You can customize the format as defined in
@@ -36,7 +37,7 @@ code_dir: downloads/code
 category_dir: blog/categories
 # markdown: rdiscount
 markdown: kramdown
-rdiscount:
+kramdown:
   extensions:
     - autolink
     - footnotes
@@ -53,7 +54,8 @@ titlecase: true       # Converts page and post titles to titlecase
 
 # list each of the sidebar modules you want to include, in the order you want them to appear.
 # To add custom asides, create files in /source/_includes/custom/asides/ and add them to the list like 'custom/asides/custom_aside_name.html'
-default_asides: [asides/recent_posts.html, asides/github.html, asides/delicious.html, asides/pinboard.html, asides/googleplus.html]
+# default_asides: [asides/recent_posts.html, asides/github.html, asides/delicious.html, asides/pinboard.html, asides/googleplus.html]
+default_asides: [asides/recent_posts.html]
 
 # Each layout uses the default asides, but they can have their own asides instead. Simply uncomment the lines below
 # and add an array with the asides you want to use.
@@ -68,12 +70,12 @@ default_asides: [asides/recent_posts.html, asides/github.html, asides/delicious.
 # Github repositories
 github_user:
 github_repo_count: 0
-github_show_profile_link: true
+github_show_profile_link: false
 github_skip_forks: true
 
 # Twitter
 twitter_user:
-twitter_tweet_button: true
+twitter_tweet_button: false
 
 # Google +1
 google_plus_one: false
@@ -93,7 +95,7 @@ delicious_user:
 delicious_count: 3
 
 # Disqus Comments
-disqus_short_name:
+disqus_short_name: ruanhao
 disqus_show_comment_count: false
 
 # Google Analytics
