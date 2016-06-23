@@ -103,3 +103,6 @@ google_analytics_tracking_id:
 
 # Facebook Like
 facebook_like: true
+
+# octopress-gemoji
+emoji_dir: /images/emoji
