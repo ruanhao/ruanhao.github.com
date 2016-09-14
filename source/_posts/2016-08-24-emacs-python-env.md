@@ -13,7 +13,7 @@ categories: python
 
 ## 配置文件
 
-```
+``` lisp
 (elpy-enable)
 (add-hook 'elpy-mode-hook
           (lambda ()
