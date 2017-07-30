@@ -1,0 +1,28 @@
+<?xml version="1.0" encoding="utf-8"?>
+<feed xmlns="http://www.w3.org/2005/Atom">
+
+  <title><![CDATA[Category: Netty | Hao Ruan's 部落格]]></title>
+  <link href="http:///blog/categories/netty/atom.xml" rel="self"/>
+  <link href="http:///"/>
+  <updated>2017-07-30T22:41:47+08:00</updated>
+  <id>http:///</id>
+  <author>
+    <name><![CDATA[Hao Ruan]]></name>
+    
+  </author>
+  <generator uri="http://octopress.org/">Octopress</generator>
+
+  
+  <entry>
+    <title type="html"><![CDATA[ByteBuf in Netty]]></title>
+    <link href="http:///blog/2016/12/05/netty-bytebuf/"/>
+    <updated>2016-12-05T13:45:44+08:00</updated>
+    <id>http:///blog/2016/12/05/netty-bytebuf</id>
+    <content type="html"><![CDATA[<h2 id="pooled-buffer">Pooled Buffer</h2>
+
+<p><img src="/images/examples/netty_pooled_buffer.png"></p>
+
+]]></content>
+  </entry>
+  
+</feed>

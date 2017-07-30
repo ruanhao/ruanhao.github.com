@@ -1,0 +1,389 @@
+
+<!DOCTYPE html>
+<!--[if IEMobile 7 ]><html class="no-js iem7"><![endif]-->
+<!--[if lt IE 9]><html class="no-js lte-ie8"><![endif]-->
+<!--[if (gt IE 8)|(gt IEMobile 7)|!(IEMobile)|!(IE)]><!--><html class="no-js" lang="en"><!--<![endif]-->
+<head>
+  <meta charset="utf-8">
+  <title>Top - Hao Ruan's 部落格</title>
+  <meta name="author" content="Hao Ruan">
+
+  
+  <meta name="description" content="性能指标 us: 如果大于 50%，说明用户进程消耗的cpu时间多，需要考虑优化用户的程序 us+sy: 大于 80% 说明可能存在 CPU 不足 wa: 显示了 IO 等待所占用的 CPU 时间百分比。如果 wa 超过 30%，说明 IO 等待严重，可能是磁盘大量随机访问造成的， &hellip;">
+  
+
+  <!-- http://t.co/dKP3o1e -->
+  <meta name="HandheldFriendly" content="True">
+  <meta name="MobileOptimized" content="320">
+  <meta name="viewport" content="width=device-width, initial-scale=1">
+
+  
+  <link rel="canonical" href="http:///blog/2016/11/30/top/">
+  <link href="/favicon.png" rel="icon">
+  <link href="/stylesheets/screen.css" media="screen, projection" rel="stylesheet" type="text/css">
+  <link href="/assets/font-awesome-4.6.3/css/font-awesome.min.css" media="screen, projection" rel="stylesheet" type="text/css">
+  <link href="/atom.xml" rel="alternate" title="Hao Ruan's 部落格" type="application/atom+xml">
+  <script src="/javascripts/modernizr-2.0.js"></script>
+  <script src="//ajax.googleapis.com/ajax/libs/jquery/1.9.1/jquery.min.js"></script>
+  <script>!window.jQuery && document.write(unescape('%3Cscript src="/javascripts/libs/jquery.min.js"%3E%3C/script%3E'))</script>
+  <script src="/javascripts/octopress.js" type="text/javascript"></script>
+  <!--Fonts from Google"s Web font directory at http://google.com/webfonts -->
+<link href="//fonts.googleapis.com/css?family=PT+Serif:regular,italic,bold,bolditalic" rel="stylesheet" type="text/css">
+<link href="//fonts.googleapis.com/css?family=PT+Sans:regular,italic,bold,bolditalic" rel="stylesheet" type="text/css">
+
+<!-- MathJax -->
+<script type="text/x-mathjax-config">
+  MathJax.Hub.Config({
+      tex2jax: {
+        inlineMath: [ ['$','$'], ["\\(","\\)"] ],
+      processEscapes: true
+    }
+  });
+</script>
+
+<script type="text/x-mathjax-config">
+    MathJax.Hub.Config({
+      tex2jax: {
+            skipTags: ['script', 'noscript', 'style', 'textarea', 'pre', 'code']
+      }
+    });
+</script>
+
+<script type="text/x-mathjax-config">
+    MathJax.Hub.Queue(function() {
+        var all = MathJax.Hub.getAllJax(), i;
+        for(i=0; i < all.length; i += 1) {
+            all[i].SourceElement().parentNode.className += ' has-jax';
+        }
+    });
+</script>
+
+<script type="text/javascript"
+   src="http://cdn.mathjax.org/mathjax/latest/MathJax.js?config=TeX-AMS-MML_HTMLorMML">
+</script>
+
+  
+
+
+  <style type="text/css">
+    .rcorners {
+        border-radius: 25px;
+    }
+  </style>
+
+</head>
+
+<body   >
+  <header role="banner"><hgroup>
+  <h1><a href="/">Hao Ruan's 部落格</a></h1>
+  
+    <h2>Oh No, Stackoverflow Again ...</h2>
+  
+</hgroup>
+
+</header>
+  <nav role="navigation"><ul class="subscription" data-subscription="rss">
+  <li><a href="/atom.xml" rel="subscribe-rss" title="subscribe via RSS">RSS</a></li>
+  
+</ul>
+  
+<form action="https://www.google.com/search" method="get">
+  <fieldset role="search">
+    <input type="hidden" name="sitesearch" value="http://">
+    <input class="search" type="text" name="q" results="0" placeholder="Search"/>
+  </fieldset>
+</form>
+  
+<ul class="main-navigation">
+  <!-- <li><a href="/">Blog</a></li> -->
+  <li><a href="/blog/archives">Archives</a></li>
+</ul>
+
+</nav>
+  <div id="main">
+    <div id="content">
+      <div>
+<article class="hentry" role="article">
+  
+  <header>
+    
+      <h1 class="entry-title">Top</h1>
+    
+    
+      <p class="meta">
+        
+
+
+
+
+<time class='entry-date' datetime='2016-11-30T13:41:06+08:00'><span class='date'><span class='date-month'>Nov</span> <span class='date-day'>30</span><span class='date-suffix'>th</span>, <span class='date-year'>2016</span></span> <span class='time'>1:41 pm</span></time>
+        
+      </p>
+    
+  </header>
+
+
+<div class="entry-content"><p><img src="/images/examples/top.png" /></p>
+
+<h3 id="section">性能指标</h3>
+
+<ul>
+  <li>us: 如果大于 50%，说明用户进程消耗的cpu时间多，需要考虑优化用户的程序</li>
+  <li>us+sy: 大于 80% 说明可能存在 CPU 不足</li>
+  <li>wa: 显示了 IO 等待所占用的 CPU 时间百分比。如果 wa 超过 30%，说明 IO 等待严重，可能是磁盘大量随机访问造成的，也可能磁盘或者磁盘访问控制器的带宽瓶颈造成的(主要是块操作)</li>
+  <li>st(steal): 在如 Xen 等虚拟环境下 CPU 运行虚拟机时间的百分比。太高表示可能需要停止一些虚拟机</li>
+</ul>
+
+<h3 id="section-1">内存数量说明</h3>
+
+<p>第四行中使用中的内存（used）指的是当前系统內核控制的内存数量，空闲内存（free）是内核尚未纳入其管控范围的數量。</p>
+
+<p>纳入内核管理的内存不见得都在使用中，还包括可以被重复利用的内存，内核并不把这些可被重新使用的内存交换到 free 中去，因此在 linux 上 free 内存会越来越少，无需担心。</p>
+
+<p>如果第五行 swap used 数值不为零且不断变化，说明内核不断进行内存 swap 操作，这是真正内存告急的征兆。</p>
+
+<h3 id="buffers--cached">buffers &amp; cached</h3>
+
+<p>buffers 和 cached 是内核管理的可用内存。从应用程序角度来看，buffers/cached 是等于可用的。</p>
+
+<p>当应用程序需在用到内存的时候，buffers/cached 可以很快得被回收。</p>
+
+<p>buffers/cached 可以用来提高文件读写性能，buffers 给块设备做缓冲区，cached 给文件做缓冲区。</p>
+
+<h3 id="section-2">内存计算</h3>
+
+<p>可用内存：free + ( buffers + cached )</p>
+
+<p>已用内存：used - ( buffers + cached )</p>
+
+<h3 id="shr">SHR</h3>
+
+<p>SHR 是指加载外部动态库 (.so) 或者以共享内存方式进行进程间通信时所使用的共享内存区域。</p>
+
+<p>这部分物理内存空间其实是被多个进程所共享的，所以称为共享内存。某个进程占用的内存除了和别的进程共享的内存之外就是自己的独占内存了。所以要计算进程独占内存的大小只要用 RES 的值减去 SHR 值即可。</p>
+
+<h3 id="section-3">实用技巧</h3>
+
+<ul>
+  <li>P: CPU 排序</li>
+  <li>M: 内存排序</li>
+  <li>1: 显示 SMP 负载情况</li>
+  <li>H: 显示线程信息</li>
+  <li>z: 高亮模式</li>
+  <li>c: 显示完整命令名</li>
+  <li>k: kill 指定进程</li>
+  <li>x: 指定排序栏高亮</li>
+  <li>&lt; 和 &gt;: 指定排序栏</li>
+  <li>top -p <pid>: 显示指定进程</pid></li>
+  <li>top -bn 1: 显示一屏信息，用于脚本</li>
+  <li>top -M 使用 megabytes 为单位</li>
+  <li>top -H -p <pid>: 监控指定进程和进行内线程信息</pid></li>
+</ul>
+
+<h3 id="refs">Refs</h3>
+
+<p><a href="http://www.cnblogs.com/bravery/archive/2012/06/27/2560611.html">观察进程的内存占用情况</a></p>
+</div>
+
+
+  <footer>
+    <p class="meta">
+      
+  
+
+<span class="byline author vcard">Posted by <span class="fn">Hao Ruan</span></span>
+
+      
+
+
+
+
+<time class='entry-date' datetime='2016-11-30T13:41:06+08:00'><span class='date'><span class='date-month'>Nov</span> <span class='date-day'>30</span><span class='date-suffix'>th</span>, <span class='date-year'>2016</span></span> <span class='time'>1:41 pm</span></time>
+      
+
+<span class="categories">
+  
+    <a class='category' href='/blog/categories/cli/'>cli</a>, <a class='category' href='/blog/categories/linux/'>linux</a>
+  
+</span>
+
+
+    </p>
+    
+      <div class="sharing">
+  
+  
+  
+    <div class="fb-like" data-send="true" data-width="450" data-show-faces="false"></div>
+  
+</div>
+
+    
+    <p class="meta">
+      
+        <a class="basic-alignment left" href="/blog/2016/09/22/openssl/" title="Previous Post: openssl">&laquo; openssl</a>
+      
+      
+        <a class="basic-alignment right" href="/blog/2016/12/05/netty-bytebuf/" title="Next Post: ByteBuf in Netty">ByteBuf in Netty &raquo;</a>
+      
+    </p>
+  </footer>
+</article>
+
+  <section>
+    <h1>Comments</h1>
+    <div id="disqus_thread" aria-live="polite"><noscript>Please enable JavaScript to view the <a href="http://disqus.com/?ref_noscript">comments powered by Disqus.</a></noscript>
+</div>
+  </section>
+
+</div>
+
+<aside class="sidebar">
+  
+    <section>
+  <!-- <h1>About Me</h1> -->
+  <style>
+    #avatar {
+        /* This image is 687 wide by 1024 tall, similar to your aspect ratio */
+        background-image: url('/images/me/me.jpg');
+
+        /* make a square container */
+        width: 120px;
+        height: 120px;
+
+        /* fill the container, preserving aspect ratio, and cropping to fit */
+        background-size: cover;
+
+        /* center the image vertically and horizontally */
+        background-position: center;
+
+        /* round the edges to a circle with border radius 1/2 container size */
+        border-radius: 50%;
+    }
+
+    .post-container {
+        margin: 20px 20px 10px 10px;
+        overflow: auto
+    }
+    .post-thumb {
+        float: left
+    }
+    .post-thumb img {
+        display: block
+    }
+    .post-content {
+        margin-left: 10px
+    }
+
+  </style>
+  <!-- <img src="/images/me/me.jpg" width="150" height="100"> -->
+  <div class="post-container">
+    <div class="post-thumb"><img id="avatar"/></div>
+    <div class="post-content">
+        <p>
+	  A tall guy with a small wife :)
+	  Likes writing useless scripts and tools.
+	  Speaks Shanghainese and now learning Cantonese.
+	  Supports Man United and hates Man City.
+	</p>
+   </div>
+</div>
+</section>
+<section>
+  <h1>Contacts</h1>
+  <div style="margin-top: 10px">
+  <a style="margin-right: 10px; text-decoration: none" target="_blank" class="fa fa-github fa-2x" href="https://www.github.com/ruanhao"></a>
+  <a style="margin-right: 10px; text-decoration: none" target="_blank" class="fa fa-linkedin fa-2x" href="https://www.linkedin.com/in/ruanhao1116"></a>
+  <a style="margin-right: 10px; text-decoration: none" target="_blank" class="fa fa-facebook fa-2x" href="https://www.facebook.com/ruanhao1116"></a>
+  <div>
+</section>
+<section>
+  <h1>Recent Posts</h1>
+  <ul id="recent_posts">
+    
+      <li class="post">
+        <a href="/blog/2016/12/19/tcpip/">Tcpip</a>
+      </li>
+    
+      <li class="post">
+        <a href="/blog/2016/12/05/netty-bytebuf/">ByteBuf in Netty</a>
+      </li>
+    
+      <li class="post">
+        <a href="/blog/2016/11/30/top/">Top</a>
+      </li>
+    
+      <li class="post">
+        <a href="/blog/2016/09/22/openssl/">Openssl</a>
+      </li>
+    
+      <li class="post">
+        <a href="/blog/2016/09/20/socat/">Socat</a>
+      </li>
+    
+  </ul>
+</section>
+<section>
+  <h1>Categories</h1>
+  <ul id="categories">
+    <li class='category'><a href='/blog/categories/cli/'>cli (6)</a></li>
+<li class='category'><a href='/blog/categories/java/'>java (2)</a></li>
+<li class='category'><a href='/blog/categories/linux/'>linux (2)</a></li>
+<li class='category'><a href='/blog/categories/netty/'>netty (1)</a></li>
+<li class='category'><a href='/blog/categories/python/'>python (2)</a></li>
+<li class='category'><a href='/blog/categories/trip/'>trip (1)</a></li>
+
+  </ul>
+</section>
+
+  
+</aside>
+
+
+    </div>
+  </div>
+  <footer role="contentinfo"><p>
+  Copyright &copy; 2017 - Hao Ruan -
+  <!-- <span class="credit">Powered by <a href="http://octopress.org">Octopress</a></span> -->
+</p>
+
+</footer>
+  
+
+<script type="text/javascript">
+      var disqus_shortname = 'ruanhao';
+      
+        
+        // var disqus_developer = 1;
+        var disqus_identifier = 'http:///blog/2016/11/30/top/';
+        var disqus_url = 'http:///blog/2016/11/30/top/';
+        var disqus_script = 'embed.js';
+      
+    (function () {
+      var dsq = document.createElement('script'); dsq.type = 'text/javascript'; dsq.async = true;
+      dsq.src = '//' + disqus_shortname + '.disqus.com/' + disqus_script;
+      (document.getElementsByTagName('head')[0] || document.getElementsByTagName('body')[0]).appendChild(dsq);
+    }());
+</script>
+
+
+
+<div id="fb-root"></div>
+<script>(function(d, s, id) {
+  var js, fjs = d.getElementsByTagName(s)[0];
+  if (d.getElementById(id)) {return;}
+  js = d.createElement(s); js.id = id; js.async = true;
+  js.src = "//connect.facebook.net/en_US/all.js#appId=212934732101925&xfbml=1";
+  fjs.parentNode.insertBefore(js, fjs);
+}(document, 'script', 'facebook-jssdk'));</script>
+
+
+
+
+
+
+
+
+
+</body>
+</html>

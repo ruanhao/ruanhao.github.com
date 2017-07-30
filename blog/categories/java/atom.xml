@@ -1,0 +1,70 @@
+<?xml version="1.0" encoding="utf-8"?>
+<feed xmlns="http://www.w3.org/2005/Atom">
+
+  <title><![CDATA[Category: Java | Hao Ruan's 部落格]]></title>
+  <link href="http:///blog/categories/java/atom.xml" rel="self"/>
+  <link href="http:///"/>
+  <updated>2017-07-30T22:41:47+08:00</updated>
+  <id>http:///</id>
+  <author>
+    <name><![CDATA[Hao Ruan]]></name>
+    
+  </author>
+  <generator uri="http://octopress.org/">Octopress</generator>
+
+  
+  <entry>
+    <title type="html"><![CDATA[ByteBuf in Netty]]></title>
+    <link href="http:///blog/2016/12/05/netty-bytebuf/"/>
+    <updated>2016-12-05T13:45:44+08:00</updated>
+    <id>http:///blog/2016/12/05/netty-bytebuf</id>
+    <content type="html"><![CDATA[<h2 id="pooled-buffer">Pooled Buffer</h2>
+
+<p><img src="/images/examples/netty_pooled_buffer.png"></p>
+
+]]></content>
+  </entry>
+  
+  <entry>
+    <title type="html"><![CDATA[检测最耗 CPU 的 Java 线程]]></title>
+    <link href="http:///blog/2016/09/09/java-cpu-detect-script/"/>
+    <updated>2016-09-09T10:02:23+08:00</updated>
+    <id>http:///blog/2016/09/09/java-cpu-detect-script</id>
+    <content type="html"><![CDATA[<h2 id="section">脚本</h2>
+
+<p>top 命令还可以监控 Java 线程，特此记录一段脚本:</p>
+
+<p>``` bash
+#!/bin/bash</p>
+
+<p>if [ $# -eq 0 ]; then
+    echo “please enter java pid”
+    exit -1
+fi</p>
+
+<p>pid=$1
+jstack_cmd=””</p>
+
+<p>if [[ $JAVA_HOME != “” ]]; then
+    jstack_cmd=”$JAVA_HOME/bin/jstack”
+else
+    r=<code>which jstack 2&gt;/dev/null</code>
+    if [[ $r != “” ]]; then
+	jstack_cmd=$r
+    else
+	echo “can not find jstack”
+	exit -2
+    fi
+fi</p>
+
+<p>line=<code>top -H -b -n 1 -p $pid | sed '1,/^$/d' | sed '1d;/^$/d' | grep -v $pid | sort -nrk9 | head -1</code>
+echo “$line” | awk ‘{print “tid: “$1,” cpu: %”$9}’</p>
+
+<p>tid_0x=<code>printf "%0x" $(echo "$line" | awk '{print $1}')</code>
+$jstack_cmd $pid | grep $tid_0x -A20 | sed -n ‘1,/^$/p’
+```
+<a href="http://hongjiang.info/find-busiest-thread-of-java">Reference</a></p>
+]]></content>
+  </entry>
+  
+</feed>

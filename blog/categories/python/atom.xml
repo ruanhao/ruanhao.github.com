@@ -1,0 +1,61 @@
+<?xml version="1.0" encoding="utf-8"?>
+<feed xmlns="http://www.w3.org/2005/Atom">
+
+  <title><![CDATA[Category: Python | Hao Ruan's 部落格]]></title>
+  <link href="http:///blog/categories/python/atom.xml" rel="self"/>
+  <link href="http:///"/>
+  <updated>2017-07-30T22:41:47+08:00</updated>
+  <id>http:///</id>
+  <author>
+    <name><![CDATA[Hao Ruan]]></name>
+    
+  </author>
+  <generator uri="http://octopress.org/">Octopress</generator>
+
+  
+  <entry>
+    <title type="html"><![CDATA[Python 语法拾遗]]></title>
+    <link href="http:///blog/2016/08/26/python-grammar/"/>
+    <updated>2016-08-26T13:27:31+08:00</updated>
+    <id>http:///blog/2016/08/26/python-grammar</id>
+    <content type="html"><![CDATA[<h2 id="section">变量命名惯例</h2>
+
+<ul>
+  <li>单一下划线变量名( _x )不会被 from module import * 语句导入</li>
+  <li>前后有双下划线变量( <strong>x</strong> )是系统定义变量名，对 python 解释器有特殊意义</li>
+  <li>两个下划线开头但结尾没有双下划线的变量( __x )是类的本地变量</li>
+  <li>交互模式下，变量名( _ )用于保存最后表达式的结果</li>
+</ul>
+
+]]></content>
+  </entry>
+  
+  <entry>
+    <title type="html"><![CDATA[Setup Python Env for Emacs]]></title>
+    <link href="http:///blog/2016/08/24/emacs-python-env/"/>
+    <updated>2016-08-24T17:40:28+08:00</updated>
+    <id>http:///blog/2016/08/24/emacs-python-env</id>
+    <content type="html"><![CDATA[<h2 id="elpy">安装 elpy</h2>
+
+<p><code>M-x package-install elpy</code></p>
+
+<h2 id="section">配置文件</h2>
+
+<p><code>lisp
+(elpy-enable)
+(add-hook 'elpy-mode-hook
+          (lambda ()
+            (define-key elpy-mode-map (kbd "M-.") 'elpy-goto-definition)
+            (define-key elpy-mode-map (kbd "C-x M-.") 'elpy-goto-definition-other-window)
+            (define-key elpy-mode-map (kbd "M-,") 'pop-tag-mark)
+            (define-key elpy-mode-map (kbd "M-RET") 'elpy-company-backend)
+            ))
+</code></p>
+
+<h2 id="happy-hacking">Happy Hacking</h2>
+
+<p><img src="/images/examples/emacs_py_env.png"></p>
+]]></content>
+  </entry>
+  
+</feed>
