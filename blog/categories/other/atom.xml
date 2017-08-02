@@ -1,10 +1,10 @@
 <?xml version="1.0" encoding="utf-8"?>
 <feed xmlns="http://www.w3.org/2005/Atom">
 
-  <title><![CDATA[Category: Trip | Hao Ruan's 部落格]]></title>
-  <link href="http:///blog/categories/trip/atom.xml" rel="self"/>
+  <title><![CDATA[Category: Other | Hao Ruan's 技术博客]]></title>
+  <link href="http:///blog/categories/other/atom.xml" rel="self"/>
   <link href="http:///"/>
-  <updated>2017-08-02T22:39:18+08:00</updated>
+  <updated>2017-08-02T23:59:27+08:00</updated>
   <id>http:///</id>
   <author>
     <name><![CDATA[Hao Ruan]]></name>
