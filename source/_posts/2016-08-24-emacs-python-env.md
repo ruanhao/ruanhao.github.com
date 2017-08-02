@@ -4,7 +4,7 @@ title: "Setup Python Env for Emacs"
 date: 2016-08-24 17:40:28 +0800
 description: python, emacs
 comments: true
-categories: python
+categories: PYTHON
 ---
 
 ## 安装 elpy
