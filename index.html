@@ -9,7 +9,7 @@
   <meta name="author" content="Hao Ruan">
 
   
-  <meta name="description" content="Pooled Buffer ">
+  <meta name="description" content="Remote Forward ssh -N -f -R &lt;remote-port&gt;:&lt;dest-host&gt;:&lt;dest-host-port&gt; user@remote-host &lt;remote-port&gt; 监听在 localhost 上， &hellip;">
   
 
   <!-- http://t.co/dKP3o1e -->
@@ -110,38 +110,6 @@
       
   <header>
     
-      <h1 class="entry-title"><a href="/blog/2016/12/05/netty-bytebuf/">ByteBuf in Netty</a></h1>
-    
-    
-      <p class="meta">
-        
-
-
-
-
-<time class='entry-date' datetime='2016-12-05T13:45:44+08:00'><span class='date'><span class='date-month'>Dec</span> <span class='date-day'>5</span><span class='date-suffix'>th</span>, <span class='date-year'>2016</span></span> <span class='time'>1:45 pm</span></time>
-        
-      </p>
-    
-  </header>
-
-
-  <div class="entry-content"><h2 id="pooled-buffer">Pooled Buffer</h2>
-
-<p><img src="/images/examples/netty_pooled_buffer.png" /></p>
-
-</div>
-  
-  
-
-
-    </article>
-  
-  
-    <article>
-      
-  <header>
-    
       <h1 class="entry-title"><a href="/blog/2016/09/14/ssh/">Ssh</a></h1>
     
     
@@ -193,43 +161,6 @@
 </ul>
 
 <p><code>ssh user@host 'mkdir -p .ssh &amp;&amp; cat &gt;&gt; .ssh/authorized_keys' &lt; ~/.ssh/id_rsa.pub </code></p>
-
-</div>
-  
-  
-
-
-    </article>
-  
-  
-    <article>
-      
-  <header>
-    
-      <h1 class="entry-title"><a href="/blog/2016/08/26/python-grammar/">Python 语法拾遗</a></h1>
-    
-    
-      <p class="meta">
-        
-
-
-
-
-<time class='entry-date' datetime='2016-08-26T13:27:31+08:00'><span class='date'><span class='date-month'>Aug</span> <span class='date-day'>26</span><span class='date-suffix'>th</span>, <span class='date-year'>2016</span></span> <span class='time'>1:27 pm</span></time>
-        
-      </p>
-    
-  </header>
-
-
-  <div class="entry-content"><h2 id="section">变量命名惯例</h2>
-
-<ul>
-  <li>单一下划线变量名( _x )不会被 from module import * 语句导入</li>
-  <li>前后有双下划线变量( <strong>x</strong> )是系统定义变量名，对 python 解释器有特殊意义</li>
-  <li>两个下划线开头但结尾没有双下划线的变量( __x )是类的本地变量</li>
-  <li>交互模式下，变量名( _ )用于保存最后表达式的结果</li>
-</ul>
 
 </div>
   
@@ -580,117 +511,6 @@ TVB 里香港的街道，菜场，码头，劏屋，渔村这些场景从小就�
 
     </article>
   
-  
-    <article>
-      
-  <header>
-    
-      <h1 class="entry-title"><a href="/blog/2016/06/24/dig/">Dig</a></h1>
-    
-    
-      <p class="meta">
-        
-
-
-
-
-<time class='entry-date' datetime='2016-06-24T13:27:49+08:00'><span class='date'><span class='date-month'>Jun</span> <span class='date-day'>24</span><span class='date-suffix'>th</span>, <span class='date-year'>2016</span></span> <span class='time'>1:27 pm</span></time>
-        
-      </p>
-    
-  </header>
-
-
-  <div class="entry-content"><h2 id="section">查询域名过程</h2>
-
-<figure class="code"><figcaption><span></span></figcaption><div class="highlight"><table><tr><td class="gutter"><pre class="line-numbers"><span class="line-number">1</span>
-</pre></td><td class="code"><pre><code class="bash"><span class="line">dig blog.ruan.host
-</span></code></pre></td></tr></table></div></figure>
-
-<p><img src="/images/examples/dig.png" /></p>
-
-<ul>
-  <li>HEADER</li>
-</ul>
-
-<p>查询参数和统计</p>
-
-<ul>
-  <li>QUESTION SECTION</li>
-</ul>
-
-<p>查询 <strong>blog.ruan.host</strong> 的 A 记录</p>
-
-<ul>
-  <li>ANSWER SECTION</li>
-</ul>
-
-<p>DNS 服务器的答复，508 是 TTL 值，表示 508 秒内不需要再查询</p>
-
-<ul>
-  <li>AUTHORITY SECTION</li>
-</ul>
-
-<p>显示 NAME SERVER (NS) 记录，即哪些服务器负责管理 <strong>fastlylb.net.</strong> 的 DNS 记录，
-可以向任一台服务器查询 <strong>prod.github.map.fastlylb.net.</strong> 的 IP 地址</p>
-
-<ul>
-  <li>ADDITIONAL SECTION</li>
-</ul>
-
-<p>显示域名服务器的 IP 地址</p>
-
-<h2 id="dns-">指定 DNS 服务器查询</h2>
-
-<p>本机 DNS 服务器的 IP 地址保存在 <code>/etc/resolv.conf</code></p>
-
-<p>也可以指定具体的服务器查询</p>
-
-<figure class="code"><figcaption><span></span></figcaption><div class="highlight"><table><tr><td class="gutter"><pre class="line-numbers"><span class="line-number">1</span>
-</pre></td><td class="code"><pre><code class="bash"><span class="line">dig @8.8.8.8 blog.ruan.host
-</span></code></pre></td></tr></table></div></figure>
-
-<h2 id="section-1">域名层级</h2>
-
-<blockquote><p>HOST.SLD.TLD.root<br />SLD :: second-level domain<br />TLD :: top-level domain</p></blockquote>
-
-<p><a href="http://www.iana.org/domains/root/db">顶级域名列表</a></p>
-
-<h2 id="section-2">显示分级查询过程</h2>
-
-<figure class="code"><figcaption><span></span></figcaption><div class="highlight"><table><tr><td class="gutter"><pre class="line-numbers"><span class="line-number">1</span>
-</pre></td><td class="code"><pre><code class="bash"><span class="line">dig +trace blog.ruan.host
-</span></code></pre></td></tr></table></div></figure>
-
-<h2 id="ns-">单独查询每一级域名的 NS 记录</h2>
-
-<figure class="code"><figcaption><span></span></figcaption><div class="highlight"><table><tr><td class="gutter"><pre class="line-numbers"><span class="line-number">1</span>
-<span class="line-number">2</span>
-<span class="line-number">3</span>
-<span class="line-number">4</span>
-<span class="line-number">5</span>
-<span class="line-number">6</span>
-</pre></td><td class="code"><pre><code class="bash"><span class="line">dig ns com.
-</span><span class="line">dig ns host.
-</span><span class="line">dig ns ruan.host.
-</span><span class="line">
-</span><span class="line">dig +short ns com.
-</span><span class="line">dig +short ns ruan.host.
-</span></code></pre></td></tr></table></div></figure>
-
-<h2 id="section-3">反向查询</h2>
-
-<figure class="code"><figcaption><span></span></figcaption><div class="highlight"><table><tr><td class="gutter"><pre class="line-numbers"><span class="line-number">1</span>
-</pre></td><td class="code"><pre><code class="bash"><span class="line">dig -x 128.199.183.19
-</span></code></pre></td></tr></table></div></figure>
-
-</div>
-  
-  
-
-
-    </article>
-  
   <div class="pagination">
     
     <a href="/blog/archives">Blog Archives</a>
@@ -761,15 +581,7 @@ TVB 里香港的街道，菜场，码头，劏屋，渔村这些场景从小就�
   <ul id="recent_posts">
     
       <li class="post">
-        <a href="/blog/2016/12/05/netty-bytebuf/">ByteBuf in Netty</a>
-      </li>
-    
-      <li class="post">
         <a href="/blog/2016/09/14/ssh/">Ssh</a>
-      </li>
-    
-      <li class="post">
-        <a href="/blog/2016/08/26/python-grammar/">Python 语法拾遗</a>
       </li>
     
       <li class="post">
@@ -785,10 +597,8 @@ TVB 里香港的街道，菜场，码头，劏屋，渔村这些场景从小就�
 <section>
   <h1>Categories</h1>
   <ul id="categories">
-    <li class='category'><a href='/blog/categories/cli/'>cli (2)</a></li>
-<li class='category'><a href='/blog/categories/java/'>java (1)</a></li>
-<li class='category'><a href='/blog/categories/netty/'>netty (1)</a></li>
-<li class='category'><a href='/blog/categories/python/'>python (2)</a></li>
+    <li class='category'><a href='/blog/categories/cli/'>cli (1)</a></li>
+<li class='category'><a href='/blog/categories/python/'>python (1)</a></li>
 <li class='category'><a href='/blog/categories/trip/'>trip (1)</a></li>
 
   </ul>

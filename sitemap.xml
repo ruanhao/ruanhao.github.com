@@ -1,16 +1,8 @@
 <?xml version="1.0" encoding="UTF-8"?>
 <urlset xmlns:xsi="http://www.w3.org/2001/XMLSchema-instance" xsi:schemaLocation="http://www.sitemaps.org/schemas/sitemap/0.9 http://www.sitemaps.org/schemas/sitemap/0.9/sitemap.xsd" xmlns="http://www.sitemaps.org/schemas/sitemap/0.9">
 <url>
-<loc>http:///blog/2016/12/05/netty-bytebuf/</loc>
-<lastmod>2016-12-05T13:45:44+08:00</lastmod>
-</url>
-<url>
 <loc>http:///blog/2016/09/14/ssh/</loc>
 <lastmod>2016-09-14T14:35:45+08:00</lastmod>
-</url>
-<url>
-<loc>http:///blog/2016/08/26/python-grammar/</loc>
-<lastmod>2016-08-26T13:27:31+08:00</lastmod>
 </url>
 <url>
 <loc>http:///blog/2016/08/24/emacs-python-env/</loc>
@@ -21,17 +13,10 @@
 <lastmod>2016-06-25T09:44:27+08:00</lastmod>
 </url>
 <url>
-<loc>http:///blog/2016/06/24/dig/</loc>
-<lastmod>2016-06-24T13:27:49+08:00</lastmod>
-</url>
-<url>
 <loc>http:///blog/archives/</loc>
 </url>
 <url>
 <loc>http:///</loc>
-</url>
-<url>
-<loc>http:///blog/categories/cli/</loc>
 </url>
 <url>
 <loc>http:///blog/categories/trip/</loc>
@@ -40,9 +25,6 @@
 <loc>http:///blog/categories/python/</loc>
 </url>
 <url>
-<loc>http:///blog/categories/netty/</loc>
-</url>
-<url>
-<loc>http:///blog/categories/java/</loc>
+<loc>http:///blog/categories/cli/</loc>
 </url>
 </urlset>

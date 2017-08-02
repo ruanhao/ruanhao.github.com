@@ -4,7 +4,7 @@
   <title><![CDATA[Hao Ruan's 部落格]]></title>
   <link href="http:///atom.xml" rel="self"/>
   <link href="http:///"/>
-  <updated>2017-08-02T22:33:43+08:00</updated>
+  <updated>2017-08-02T22:39:18+08:00</updated>
   <id>http:///</id>
   <author>
     <name><![CDATA[Hao Ruan]]></name>
@@ -12,18 +12,6 @@
   </author>
   <generator uri="http://octopress.org/">Octopress</generator>
 
-  
-  <entry>
-    <title type="html"><![CDATA[ByteBuf in Netty]]></title>
-    <link href="http:///blog/2016/12/05/netty-bytebuf/"/>
-    <updated>2016-12-05T13:45:44+08:00</updated>
-    <id>http:///blog/2016/12/05/netty-bytebuf</id>
-    <content type="html"><![CDATA[<h2 id="pooled-buffer">Pooled Buffer</h2>
-
-<p><img src="http:///images/examples/netty_pooled_buffer.png" /></p>
-
-]]></content>
-  </entry>
   
   <entry>
     <title type="html"><![CDATA[Ssh]]></title>
@@ -65,23 +53,6 @@
 </ul>
 
 <p><code>ssh user@host 'mkdir -p .ssh &amp;&amp; cat &gt;&gt; .ssh/authorized_keys' &lt; ~/.ssh/id_rsa.pub </code></p>
-
-]]></content>
-  </entry>
-  
-  <entry>
-    <title type="html"><![CDATA[Python 语法拾遗]]></title>
-    <link href="http:///blog/2016/08/26/python-grammar/"/>
-    <updated>2016-08-26T13:27:31+08:00</updated>
-    <id>http:///blog/2016/08/26/python-grammar</id>
-    <content type="html"><![CDATA[<h2 id="section">变量命名惯例</h2>
-
-<ul>
-  <li>单一下划线变量名( _x )不会被 from module import * 语句导入</li>
-  <li>前后有双下划线变量( <strong>x</strong> )是系统定义变量名，对 python 解释器有特殊意义</li>
-  <li>两个下划线开头但结尾没有双下划线的变量( __x )是类的本地变量</li>
-  <li>交互模式下，变量名( _ )用于保存最后表达式的结果</li>
-</ul>
 
 ]]></content>
   </entry>
@@ -384,97 +355,6 @@ TVB 里香港的街道，菜场，码头，劏屋，渔村这些场景从小就�
 <p>所谓己所不欲，勿施于人，在希望得到别人尊重的同时，也请端正自身的态度。</p>
 
 <p>香港，在某些人看来，只是一个免税港，购物天堂，但在一些人心里，她是一个家园，一份感情，一段历史。</p>
-
-]]></content>
-  </entry>
-  
-  <entry>
-    <title type="html"><![CDATA[Dig]]></title>
-    <link href="http:///blog/2016/06/24/dig/"/>
-    <updated>2016-06-24T13:27:49+08:00</updated>
-    <id>http:///blog/2016/06/24/dig</id>
-    <content type="html"><![CDATA[<h2 id="section">查询域名过程</h2>
-
-<figure class="code"><figcaption><span></span></figcaption><div class="highlight"><table><tr><td class="gutter"><pre class="line-numbers"><span class="line-number">1</span>
-</pre></td><td class="code"><pre><code class="bash"><span class="line">dig blog.ruan.host
-</span></code></pre></td></tr></table></div></figure>
-
-<p><img src="http:///images/examples/dig.png" /></p>
-
-<ul>
-  <li>HEADER</li>
-</ul>
-
-<p>查询参数和统计</p>
-
-<ul>
-  <li>QUESTION SECTION</li>
-</ul>
-
-<p>查询 <strong>blog.ruan.host</strong> 的 A 记录</p>
-
-<ul>
-  <li>ANSWER SECTION</li>
-</ul>
-
-<p>DNS 服务器的答复，508 是 TTL 值，表示 508 秒内不需要再查询</p>
-
-<ul>
-  <li>AUTHORITY SECTION</li>
-</ul>
-
-<p>显示 NAME SERVER (NS) 记录，即哪些服务器负责管理 <strong>fastlylb.net.</strong> 的 DNS 记录，
-可以向任一台服务器查询 <strong>prod.github.map.fastlylb.net.</strong> 的 IP 地址</p>
-
-<ul>
-  <li>ADDITIONAL SECTION</li>
-</ul>
-
-<p>显示域名服务器的 IP 地址</p>
-
-<h2 id="dns-">指定 DNS 服务器查询</h2>
-
-<p>本机 DNS 服务器的 IP 地址保存在 <code>/etc/resolv.conf</code></p>
-
-<p>也可以指定具体的服务器查询</p>
-
-<figure class="code"><figcaption><span></span></figcaption><div class="highlight"><table><tr><td class="gutter"><pre class="line-numbers"><span class="line-number">1</span>
-</pre></td><td class="code"><pre><code class="bash"><span class="line">dig @8.8.8.8 blog.ruan.host
-</span></code></pre></td></tr></table></div></figure>
-
-<h2 id="section-1">域名层级</h2>
-
-<blockquote><p>HOST.SLD.TLD.root<br />SLD :: second-level domain<br />TLD :: top-level domain</p></blockquote>
-
-<p><a href="http://www.iana.org/domains/root/db">顶级域名列表</a></p>
-
-<h2 id="section-2">显示分级查询过程</h2>
-
-<figure class="code"><figcaption><span></span></figcaption><div class="highlight"><table><tr><td class="gutter"><pre class="line-numbers"><span class="line-number">1</span>
-</pre></td><td class="code"><pre><code class="bash"><span class="line">dig +trace blog.ruan.host
-</span></code></pre></td></tr></table></div></figure>
-
-<h2 id="ns-">单独查询每一级域名的 NS 记录</h2>
-
-<figure class="code"><figcaption><span></span></figcaption><div class="highlight"><table><tr><td class="gutter"><pre class="line-numbers"><span class="line-number">1</span>
-<span class="line-number">2</span>
-<span class="line-number">3</span>
-<span class="line-number">4</span>
-<span class="line-number">5</span>
-<span class="line-number">6</span>
-</pre></td><td class="code"><pre><code class="bash"><span class="line">dig ns com.
-</span><span class="line">dig ns host.
-</span><span class="line">dig ns ruan.host.
-</span><span class="line">
-</span><span class="line">dig +short ns com.
-</span><span class="line">dig +short ns ruan.host.
-</span></code></pre></td></tr></table></div></figure>
-
-<h2 id="section-3">反向查询</h2>
-
-<figure class="code"><figcaption><span></span></figcaption><div class="highlight"><table><tr><td class="gutter"><pre class="line-numbers"><span class="line-number">1</span>
-</pre></td><td class="code"><pre><code class="bash"><span class="line">dig -x 128.199.183.19
-</span></code></pre></td></tr></table></div></figure>
 
 ]]></content>
   </entry>
