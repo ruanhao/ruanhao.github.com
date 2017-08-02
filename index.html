@@ -9,23 +9,7 @@
   <meta name="author" content="Hao Ruan">
 
   
-  <meta name="description" content="TCP / IP 报文格式 1
-2
-3
-4
-5
-6
-7
-8
-9
-10
-11
-12
-13
-14
-15
-0 1 2 3
-0 1 2 3 4 5 6 7 8 9 0 1 2 3 4 5 6 7 8 9 0 1 2 3 4 5 6 7 8 9 0 1 &hellip;">
+  <meta name="description" content="Pooled Buffer ">
   
 
   <!-- http://t.co/dKP3o1e -->
@@ -126,116 +110,6 @@
       
   <header>
     
-      <h1 class="entry-title"><a href="/blog/2016/12/19/tcpip/">Tcpip</a></h1>
-    
-    
-      <p class="meta">
-        
-
-
-
-
-<time class='entry-date' datetime='2016-12-19T16:38:32+08:00'><span class='date'><span class='date-month'>Dec</span> <span class='date-day'>19</span><span class='date-suffix'>th</span>, <span class='date-year'>2016</span></span> <span class='time'>4:38 pm</span></time>
-        
-      </p>
-    
-  </header>
-
-
-  <div class="entry-content"><h3 id="tcp--ip-">TCP / IP 报文格式</h3>
-
-<figure class="code"><div class="highlight"><table><tr><td class="gutter"><pre class="line-numbers"><span class="line-number">1</span>
-<span class="line-number">2</span>
-<span class="line-number">3</span>
-<span class="line-number">4</span>
-<span class="line-number">5</span>
-<span class="line-number">6</span>
-<span class="line-number">7</span>
-<span class="line-number">8</span>
-<span class="line-number">9</span>
-<span class="line-number">10</span>
-<span class="line-number">11</span>
-<span class="line-number">12</span>
-<span class="line-number">13</span>
-<span class="line-number">14</span>
-<span class="line-number">15</span>
-</pre></td><td class="code"><pre><code class=""><span class="line">0                   1                   2                   3
-</span><span class="line">0 1 2 3 4 5 6 7 8 9 0 1 2 3 4 5 6 7 8 9 0 1 2 3 4 5 6 7 8 9 0 1
-</span><span class="line">+-+-+-+-+-+-+-+-+-+-+-+-+-+-+-+-+-+-+-+-+-+-+-+-+-+-+-+-+-+-+-+-+
-</span><span class="line">|Version|  IHL  |Type of Service|          Total Length         |
-</span><span class="line">+-+-+-+-+-+-+-+-+-+-+-+-+-+-+-+-+-+-+-+-+-+-+-+-+-+-+-+-+-+-+-+-+
-</span><span class="line">|         Identification        |Flags|      Fragment Offset    |
-</span><span class="line">+-+-+-+-+-+-+-+-+-+-+-+-+-+-+-+-+-+-+-+-+-+-+-+-+-+-+-+-+-+-+-+-+
-</span><span class="line">|  Time to Live |    Protocol   |         Header Checksum       |
-</span><span class="line">+-+-+-+-+-+-+-+-+-+-+-+-+-+-+-+-+-+-+-+-+-+-+-+-+-+-+-+-+-+-+-+-+
-</span><span class="line">|                       Source Address                          |
-</span><span class="line">+-+-+-+-+-+-+-+-+-+-+-+-+-+-+-+-+-+-+-+-+-+-+-+-+-+-+-+-+-+-+-+-+
-</span><span class="line">|                    Destination Address                        |
-</span><span class="line">+-+-+-+-+-+-+-+-+-+-+-+-+-+-+-+-+-+-+-+-+-+-+-+-+-+-+-+-+-+-+-+-+
-</span><span class="line">|                    Options                    |    Padding    |
-</span><span class="line">+-+-+-+-+-+-+-+-+-+-+-+-+-+-+-+-+-+-+-+-+-+-+-+-+-+-+-+-+-+-+-+-+
-</span></code></pre></td></tr></table></div></figure>
-
-<figure class="code"><div class="highlight"><table><tr><td class="gutter"><pre class="line-numbers"><span class="line-number">1</span>
-<span class="line-number">2</span>
-<span class="line-number">3</span>
-<span class="line-number">4</span>
-<span class="line-number">5</span>
-<span class="line-number">6</span>
-<span class="line-number">7</span>
-<span class="line-number">8</span>
-<span class="line-number">9</span>
-<span class="line-number">10</span>
-<span class="line-number">11</span>
-<span class="line-number">12</span>
-<span class="line-number">13</span>
-<span class="line-number">14</span>
-<span class="line-number">15</span>
-<span class="line-number">16</span>
-<span class="line-number">17</span>
-<span class="line-number">18</span>
-<span class="line-number">19</span>
-</pre></td><td class="code"><pre><code class=""><span class="line"> 0                   1                   2                   3
-</span><span class="line"> 0 1 2 3 4 5 6 7 8 9 0 1 2 3 4 5 6 7 8 9 0 1 2 3 4 5 6 7 8 9 0 1
-</span><span class="line"> +-+-+-+-+-+-+-+-+-+-+-+-+-+-+-+-+-+-+-+-+-+-+-+-+-+-+-+-+-+-+-+-+
-</span><span class="line"> |          Source Port          |       Destination Port        |
-</span><span class="line"> +-+-+-+-+-+-+-+-+-+-+-+-+-+-+-+-+-+-+-+-+-+-+-+-+-+-+-+-+-+-+-+-+
-</span><span class="line"> |                        Sequence Number                        |
-</span><span class="line"> +-+-+-+-+-+-+-+-+-+-+-+-+-+-+-+-+-+-+-+-+-+-+-+-+-+-+-+-+-+-+-+-+
-</span><span class="line"> |                    Acknowledgment Number                      |
-</span><span class="line"> +-+-+-+-+-+-+-+-+-+-+-+-+-+-+-+-+-+-+-+-+-+-+-+-+-+-+-+-+-+-+-+-+
-</span><span class="line"> |  Data |       |C|E|U|A|P|R|S|F|                               |
-</span><span class="line"> | Offset|  Res. |W|C|R|C|S|S|Y|I|            Window             |
-</span><span class="line"> |       |       |R|E|G|K|H|T|N|N|                               |
-</span><span class="line"> +-+-+-+-+-+-+-+-+-+-+-+-+-+-+-+-+-+-+-+-+-+-+-+-+-+-+-+-+-+-+-+-+
-</span><span class="line"> |           Checksum            |         Urgent Pointer        |
-</span><span class="line"> +-+-+-+-+-+-+-+-+-+-+-+-+-+-+-+-+-+-+-+-+-+-+-+-+-+-+-+-+-+-+-+-+
-</span><span class="line"> |                    Options                    |    Padding    |
-</span><span class="line"> +-+-+-+-+-+-+-+-+-+-+-+-+-+-+-+-+-+-+-+-+-+-+-+-+-+-+-+-+-+-+-+-+
-</span><span class="line"> |                             data                              |
-</span><span class="line"> +-+-+-+-+-+-+-+-+-+-+-+-+-+-+-+-+-+-+-+-+-+-+-+-+-+-+-+-+-+-+-+-+
-</span></code></pre></td></tr></table></div></figure>
-
-<h3 id="tcp-">TCP 状态机</h3>
-
-<p><img src="/images/examples/tcp_state_machine.jpg" /></p>
-
-<p><img src="/images/examples/tcp_state_machine2.png" /></p>
-
-<p><img src="/images/examples/tcp_state_machine3.jpg" /></p>
-
-</div>
-  
-  
-
-
-    </article>
-  
-  
-    <article>
-      
-  <header>
-    
       <h1 class="entry-title"><a href="/blog/2016/12/05/netty-bytebuf/">ByteBuf in Netty</a></h1>
     
     
@@ -256,274 +130,6 @@
 
 <p><img src="/images/examples/netty_pooled_buffer.png" /></p>
 
-</div>
-  
-  
-
-
-    </article>
-  
-  
-    <article>
-      
-  <header>
-    
-      <h1 class="entry-title"><a href="/blog/2016/11/30/top/">Top</a></h1>
-    
-    
-      <p class="meta">
-        
-
-
-
-
-<time class='entry-date' datetime='2016-11-30T13:41:06+08:00'><span class='date'><span class='date-month'>Nov</span> <span class='date-day'>30</span><span class='date-suffix'>th</span>, <span class='date-year'>2016</span></span> <span class='time'>1:41 pm</span></time>
-        
-      </p>
-    
-  </header>
-
-
-  <div class="entry-content"><p><img src="/images/examples/top.png" /></p>
-
-<h3 id="section">性能指标</h3>
-
-<ul>
-  <li>us: 如果大于 50%，说明用户进程消耗的cpu时间多，需要考虑优化用户的程序</li>
-  <li>us+sy: 大于 80% 说明可能存在 CPU 不足</li>
-  <li>wa: 显示了 IO 等待所占用的 CPU 时间百分比。如果 wa 超过 30%，说明 IO 等待严重，可能是磁盘大量随机访问造成的，也可能磁盘或者磁盘访问控制器的带宽瓶颈造成的(主要是块操作)</li>
-  <li>st(steal): 在如 Xen 等虚拟环境下 CPU 运行虚拟机时间的百分比。太高表示可能需要停止一些虚拟机</li>
-</ul>
-
-<h3 id="section-1">内存数量说明</h3>
-
-<p>第四行中使用中的内存（used）指的是当前系统內核控制的内存数量，空闲内存（free）是内核尚未纳入其管控范围的數量。</p>
-
-<p>纳入内核管理的内存不见得都在使用中，还包括可以被重复利用的内存，内核并不把这些可被重新使用的内存交换到 free 中去，因此在 linux 上 free 内存会越来越少，无需担心。</p>
-
-<p>如果第五行 swap used 数值不为零且不断变化，说明内核不断进行内存 swap 操作，这是真正内存告急的征兆。</p>
-
-<h3 id="buffers--cached">buffers &amp; cached</h3>
-
-<p>buffers 和 cached 是内核管理的可用内存。从应用程序角度来看，buffers/cached 是等于可用的。</p>
-
-<p>当应用程序需在用到内存的时候，buffers/cached 可以很快得被回收。</p>
-
-<p>buffers/cached 可以用来提高文件读写性能，buffers 给块设备做缓冲区，cached 给文件做缓冲区。</p>
-
-<h3 id="section-2">内存计算</h3>
-
-<p>可用内存：free + ( buffers + cached )</p>
-
-<p>已用内存：used - ( buffers + cached )</p>
-
-<h3 id="shr">SHR</h3>
-
-<p>SHR 是指加载外部动态库 (.so) 或者以共享内存方式进行进程间通信时所使用的共享内存区域。</p>
-
-<p>这部分物理内存空间其实是被多个进程所共享的，所以称为共享内存。某个进程占用的内存除了和别的进程共享的内存之外就是自己的独占内存了。所以要计算进程独占内存的大小只要用 RES 的值减去 SHR 值即可。</p>
-
-<h3 id="section-3">实用技巧</h3>
-
-<ul>
-  <li>P: CPU 排序</li>
-  <li>M: 内存排序</li>
-  <li>1: 显示 SMP 负载情况</li>
-  <li>H: 显示线程信息</li>
-  <li>z: 高亮模式</li>
-  <li>c: 显示完整命令名</li>
-  <li>k: kill 指定进程</li>
-  <li>x: 指定排序栏高亮</li>
-  <li>&lt; 和 &gt;: 指定排序栏</li>
-  <li>top -p <pid>: 显示指定进程</pid></li>
-  <li>top -bn 1: 显示一屏信息，用于脚本</li>
-  <li>top -M 使用 megabytes 为单位</li>
-  <li>top -H -p <pid>: 监控指定进程和进行内线程信息</pid></li>
-</ul>
-
-<h3 id="refs">Refs</h3>
-
-<p><a href="http://www.cnblogs.com/bravery/archive/2012/06/27/2560611.html">观察进程的内存占用情况</a></p>
-</div>
-  
-  
-
-
-    </article>
-  
-  
-    <article>
-      
-  <header>
-    
-      <h1 class="entry-title"><a href="/blog/2016/09/22/openssl/">Openssl</a></h1>
-    
-    
-      <p class="meta">
-        
-
-
-
-
-<time class='entry-date' datetime='2016-09-22T10:22:15+08:00'><span class='date'><span class='date-month'>Sep</span> <span class='date-day'>22</span><span class='date-suffix'>nd</span>, <span class='date-year'>2016</span></span> <span class='time'>10:22 am</span></time>
-        
-      </p>
-    
-  </header>
-
-
-  <div class="entry-content"><h2 id="section">制作自签署证书步骤</h2>
-
-<p>自签署证书一般作为 CA 的证书，普通的证书一般由 CA 来签署，也可以按照该步骤制作自签署的普通证书（将自身作为 CA ）</p>
-
-<ul>
-  <li>&lt;1&gt; 生成密钥</li>
-</ul>
-
-<figure class="code"><div class="highlight"><table><tr><td class="gutter"><pre class="line-numbers"><span class="line-number">1</span>
-<span class="line-number">2</span>
-</pre></td><td class="code"><pre><code class=""><span class="line">openssl genrsa 2048 &gt;ca.key.pem ## 生成2048位私钥
-</span><span class="line">openssl rsa -in ca.key.pem -pubout ## 查看公钥</span></code></pre></td></tr></table></div></figure>
-
-<ul>
-  <li>&lt;2&gt; 生成自签署证书</li>
-</ul>
-
-<figure class="code"><div class="highlight"><table><tr><td class="gutter"><pre class="line-numbers"><span class="line-number">1</span>
-<span class="line-number">2</span>
-</pre></td><td class="code"><pre><code class=""><span class="line">openssl req -new -x509 -key ca.key.pem -out ca.cert.pem -days 365 ## -x509 表示生成自签名证书
-</span><span class="line">openssl x509 -text -in cacert.pem ## 查看证书内容</span></code></pre></td></tr></table></div></figure>
-
-<h2 id="section-1">签署证书步骤</h2>
-
-<ul>
-  <li>&lt;1&gt; 生成 csr</li>
-</ul>
-
-<p><code>openssl req -new -key webserver.key -out webserver.csr</code></p>
-
-<ul>
-  <li>&lt;2&gt; 签署 csr</li>
-</ul>
-
-<p><code>openssl ca -in webserver.csr -out webserver.crt ## 需先部署好 openssl 的 CA 证书</code></p>
-
-<h3 id="section-2">通过签署证书的方式设置证书的有效日期</h3>
-
-<figure class="code"><figcaption><span></span></figcaption><div class="highlight"><table><tr><td class="gutter"><pre class="line-numbers"><span class="line-number">1</span>
-<span class="line-number">2</span>
-<span class="line-number">3</span>
-<span class="line-number">4</span>
-<span class="line-number">5</span>
-<span class="line-number">6</span>
-<span class="line-number">7</span>
-</pre></td><td class="code"><pre><code class="bash"><span class="line">rm -rf demoCA
-</span><span class="line">mkdir -p demoCA/newcerts
-</span><span class="line">touch demoCA/index.txt
-</span><span class="line">openssl genrsa -out usc.key.pem 2048
-</span><span class="line">openssl req -new -key usc.key.pem -out usc.csr.pem -subj <span class="s2">&quot;/C=US/ST=Califomia/L=Irvine/O=Cisco Systems, Inc./OU=Cisco Small Business/CN=Network Orchestrator Agent&quot;</span>
-</span><span class="line">openssl ca -selfsign -keyfile usc.key.pem -startdate 20160901000000Z -days <span class="m">7300</span> -batch -in usc.csr.pem -out usc.cert.pem -create_serial
-</span><span class="line">rm -rf demoCA
-</span></code></pre></td></tr></table></div></figure>
-
-<h2 id="openssl-">使用 openssl 加解密</h2>
-
-<ul>
-  <li>&lt;1&gt; 加密</li>
-</ul>
-
-<p><code>openssl enc -des3 -a -in ./test-cipher -out test-cipher.des3</code></p>
-
-<ul>
-  <li>&lt;2&gt; 解密</li>
-</ul>
-
-<p><code>openssl enc -des3 -d -a -in ./test-cipher.des3 -out test-cipher</code></p>
-
-<h2 id="openssl--1">使用 openssl 生成随机字符串</h2>
-
-<p><code>openssl rand -hex 10</code></p>
-
-<h2 id="openssl--2">使用 openssl 查看握手信息</h2>
-
-<p><code>openssl s_client -connect &lt;ip&gt;:&lt;port&gt;</code></p>
-
-<h2 id="section-3">格式转换</h2>
-
-<ul>
-  <li>pksc1 =&gt; pksc8</li>
-</ul>
-
-<figure class="code"><figcaption><span></span></figcaption><div class="highlight"><table><tr><td class="gutter"><pre class="line-numbers"><span class="line-number">1</span>
-</pre></td><td class="code"><pre><code class="bash"><span class="line">openssl pkcs8 -topk8 -inform pem -in cakey.pem -outform pem -nocrypt -out cakey.pkcs8.pem
-</span></code></pre></td></tr></table></div></figure>
-
-<ul>
-  <li>pem =&gt; pksc12</li>
-</ul>
-
-<p><code>openssl pkcs12 -export -in ./client.crt -inkey ./client.key -out client.p12</code></p>
-</div>
-  
-  
-
-
-    </article>
-  
-  
-    <article>
-      
-  <header>
-    
-      <h1 class="entry-title"><a href="/blog/2016/09/20/socat/">Socat</a></h1>
-    
-    
-      <p class="meta">
-        
-
-
-
-
-<time class='entry-date' datetime='2016-09-20T10:32:26+08:00'><span class='date'><span class='date-month'>Sep</span> <span class='date-day'>20</span><span class='date-suffix'>th</span>, <span class='date-year'>2016</span></span> <span class='time'>10:32 am</span></time>
-        
-      </p>
-    
-  </header>
-
-
-  <div class="entry-content"><h2 id="socat-">使用 socat 打开端口传输文件</h2>
-
-<ul>
-  <li>&lt;1&gt; Server</li>
-</ul>
-
-<p><code>socat tcp-l:12345,reuseaddr,fork open:&lt;filename&gt;</code></p>
-
-<ul>
-  <li>&lt;2&gt; Client</li>
-</ul>
-
-<p><code>socat tcp:&lt;ip&gt;:12345 open:&lt;filename&gt;,create</code></p>
-
-<h2 id="socat--1">使用 socat 打开端口登陆</h2>
-
-<ul>
-  <li>&lt;1&gt; Server</li>
-</ul>
-
-<p><code>socat tcp-listen:8888 exec:'bash -i',pty,setsid,stderr,echo=0</code></p>
-
-<ul>
-  <li>&lt;2&gt; Client</li>
-</ul>
-
-<p><code>socat readline &lt;server-ip&gt;:8888</code></p>
-
-<h2 id="socat-tls-">使用 socat 建立tls 通信</h2>
-
-<figure class="code"><figcaption><span></span></figcaption><div class="highlight"><table><tr><td class="gutter"><pre class="line-numbers"><span class="line-number">1</span>
-</pre></td><td class="code"><pre><code class="bash"><span class="line">socat -U openssl-listen:8443,reuseaddr,cert<span class="o">=</span>server.crt.pem,key<span class="o">=</span>server.key.pem,verify<span class="o">=</span>0,fork open:&lt;filename&gt;
-</span></code></pre></td></tr></table></div></figure>
 </div>
   
   
@@ -588,94 +194,6 @@
 
 <p><code>ssh user@host 'mkdir -p .ssh &amp;&amp; cat &gt;&gt; .ssh/authorized_keys' &lt; ~/.ssh/id_rsa.pub </code></p>
 
-</div>
-  
-  
-
-
-    </article>
-  
-  
-    <article>
-      
-  <header>
-    
-      <h1 class="entry-title"><a href="/blog/2016/09/09/java-cpu-detect-script/">检测最耗 CPU 的 Java 线程</a></h1>
-    
-    
-      <p class="meta">
-        
-
-
-
-
-<time class='entry-date' datetime='2016-09-09T10:02:23+08:00'><span class='date'><span class='date-month'>Sep</span> <span class='date-day'>9</span><span class='date-suffix'>th</span>, <span class='date-year'>2016</span></span> <span class='time'>10:02 am</span></time>
-        
-      </p>
-    
-  </header>
-
-
-  <div class="entry-content"><h2 id="section">脚本</h2>
-
-<p>top 命令还可以监控 Java 线程，特此记录一段脚本:</p>
-
-<figure class="code"><figcaption><span></span></figcaption><div class="highlight"><table><tr><td class="gutter"><pre class="line-numbers"><span class="line-number">1</span>
-<span class="line-number">2</span>
-<span class="line-number">3</span>
-<span class="line-number">4</span>
-<span class="line-number">5</span>
-<span class="line-number">6</span>
-<span class="line-number">7</span>
-<span class="line-number">8</span>
-<span class="line-number">9</span>
-<span class="line-number">10</span>
-<span class="line-number">11</span>
-<span class="line-number">12</span>
-<span class="line-number">13</span>
-<span class="line-number">14</span>
-<span class="line-number">15</span>
-<span class="line-number">16</span>
-<span class="line-number">17</span>
-<span class="line-number">18</span>
-<span class="line-number">19</span>
-<span class="line-number">20</span>
-<span class="line-number">21</span>
-<span class="line-number">22</span>
-<span class="line-number">23</span>
-<span class="line-number">24</span>
-<span class="line-number">25</span>
-<span class="line-number">26</span>
-<span class="line-number">27</span>
-</pre></td><td class="code"><pre><code class="bash"><span class="line"><span class="c">#!/bin/bash</span>
-</span><span class="line">
-</span><span class="line"><span class="k">if</span> <span class="o">[</span> <span class="nv">$# </span>-eq <span class="m">0</span> <span class="o">]</span><span class="p">;</span> <span class="k">then</span>
-</span><span class="line">    <span class="nb">echo</span> <span class="s2">&quot;please enter java pid&quot;</span>
-</span><span class="line">    <span class="nb">exit</span> -1
-</span><span class="line"><span class="k">fi</span>
-</span><span class="line">
-</span><span class="line"><span class="nv">pid</span><span class="o">=</span><span class="nv">$1</span>
-</span><span class="line"><span class="nv">jstack_cmd</span><span class="o">=</span><span class="s2">&quot;&quot;</span>
-</span><span class="line">
-</span><span class="line"><span class="k">if</span> <span class="o">[[</span> <span class="nv">$JAVA_HOME</span> !<span class="o">=</span> <span class="s2">&quot;&quot;</span> <span class="o">]]</span><span class="p">;</span> <span class="k">then</span>
-</span><span class="line">    <span class="nv">jstack_cmd</span><span class="o">=</span><span class="s2">&quot;$JAVA_HOME/bin/jstack&quot;</span>
-</span><span class="line"><span class="k">else</span>
-</span><span class="line">    <span class="nv">r</span><span class="o">=</span><span class="sb">`</span>which jstack 2&gt;/dev/null<span class="sb">`</span>
-</span><span class="line">    <span class="k">if</span> <span class="o">[[</span> <span class="nv">$r</span> !<span class="o">=</span> <span class="s2">&quot;&quot;</span> <span class="o">]]</span><span class="p">;</span> <span class="k">then</span>
-</span><span class="line">	<span class="nv">jstack_cmd</span><span class="o">=</span><span class="nv">$r</span>
-</span><span class="line">    <span class="k">else</span>
-</span><span class="line">	<span class="nb">echo</span> <span class="s2">&quot;can not find jstack&quot;</span>
-</span><span class="line">	<span class="nb">exit</span> -2
-</span><span class="line">    <span class="k">fi</span>
-</span><span class="line"><span class="k">fi</span>
-</span><span class="line">
-</span><span class="line"><span class="nv">line</span><span class="o">=</span><span class="sb">`</span>top -H -b -n <span class="m">1</span> -p <span class="nv">$pid</span> <span class="p">|</span> sed <span class="s1">&#39;1,/^$/d&#39;</span> <span class="p">|</span> sed <span class="s1">&#39;1d;/^$/d&#39;</span> <span class="p">|</span> grep -v <span class="nv">$pid</span> <span class="p">|</span> sort -nrk9 <span class="p">|</span> head -1<span class="sb">`</span>
-</span><span class="line"><span class="nb">echo</span> <span class="s2">&quot;$line&quot;</span> <span class="p">|</span> awk <span class="s1">&#39;{print &quot;tid: &quot;$1,&quot; cpu: %&quot;$9}&#39;</span>
-</span><span class="line">
-</span><span class="line"><span class="nv">tid_0x</span><span class="o">=</span><span class="sb">`</span><span class="nb">printf</span> <span class="s2">&quot;%0x&quot;</span> <span class="k">$(</span><span class="nb">echo</span> <span class="s2">&quot;$line&quot;</span> <span class="p">|</span> awk <span class="s1">&#39;{print $1}&#39;</span><span class="k">)</span><span class="sb">`</span>
-</span><span class="line"><span class="nv">$jstack_cmd</span> <span class="nv">$pid</span> <span class="p">|</span> grep <span class="nv">$tid_0x</span> -A20 <span class="p">|</span> sed -n <span class="s1">&#39;1,/^$/p&#39;</span>
-</span></code></pre></td></tr></table></div></figure>
-<p><a href="http://hongjiang.info/find-busiest-thread-of-java">Reference</a></p>
 </div>
   
   
@@ -1062,9 +580,118 @@ TVB 里香港的街道，菜场，码头，劏屋，渔村这些场景从小就�
 
     </article>
   
-  <div class="pagination">
+  
+    <article>
+      
+  <header>
     
-      <a class="prev" href="/posts/2">&larr; Older</a>
+      <h1 class="entry-title"><a href="/blog/2016/06/24/dig/">Dig</a></h1>
+    
+    
+      <p class="meta">
+        
+
+
+
+
+<time class='entry-date' datetime='2016-06-24T13:27:49+08:00'><span class='date'><span class='date-month'>Jun</span> <span class='date-day'>24</span><span class='date-suffix'>th</span>, <span class='date-year'>2016</span></span> <span class='time'>1:27 pm</span></time>
+        
+      </p>
+    
+  </header>
+
+
+  <div class="entry-content"><h2 id="section">查询域名过程</h2>
+
+<figure class="code"><figcaption><span></span></figcaption><div class="highlight"><table><tr><td class="gutter"><pre class="line-numbers"><span class="line-number">1</span>
+</pre></td><td class="code"><pre><code class="bash"><span class="line">dig blog.ruan.host
+</span></code></pre></td></tr></table></div></figure>
+
+<p><img src="/images/examples/dig.png" /></p>
+
+<ul>
+  <li>HEADER</li>
+</ul>
+
+<p>查询参数和统计</p>
+
+<ul>
+  <li>QUESTION SECTION</li>
+</ul>
+
+<p>查询 <strong>blog.ruan.host</strong> 的 A 记录</p>
+
+<ul>
+  <li>ANSWER SECTION</li>
+</ul>
+
+<p>DNS 服务器的答复，508 是 TTL 值，表示 508 秒内不需要再查询</p>
+
+<ul>
+  <li>AUTHORITY SECTION</li>
+</ul>
+
+<p>显示 NAME SERVER (NS) 记录，即哪些服务器负责管理 <strong>fastlylb.net.</strong> 的 DNS 记录，
+可以向任一台服务器查询 <strong>prod.github.map.fastlylb.net.</strong> 的 IP 地址</p>
+
+<ul>
+  <li>ADDITIONAL SECTION</li>
+</ul>
+
+<p>显示域名服务器的 IP 地址</p>
+
+<h2 id="dns-">指定 DNS 服务器查询</h2>
+
+<p>本机 DNS 服务器的 IP 地址保存在 <code>/etc/resolv.conf</code></p>
+
+<p>也可以指定具体的服务器查询</p>
+
+<figure class="code"><figcaption><span></span></figcaption><div class="highlight"><table><tr><td class="gutter"><pre class="line-numbers"><span class="line-number">1</span>
+</pre></td><td class="code"><pre><code class="bash"><span class="line">dig @8.8.8.8 blog.ruan.host
+</span></code></pre></td></tr></table></div></figure>
+
+<h2 id="section-1">域名层级</h2>
+
+<blockquote><p>HOST.SLD.TLD.root<br />SLD :: second-level domain<br />TLD :: top-level domain</p></blockquote>
+
+<p><a href="http://www.iana.org/domains/root/db">顶级域名列表</a></p>
+
+<h2 id="section-2">显示分级查询过程</h2>
+
+<figure class="code"><figcaption><span></span></figcaption><div class="highlight"><table><tr><td class="gutter"><pre class="line-numbers"><span class="line-number">1</span>
+</pre></td><td class="code"><pre><code class="bash"><span class="line">dig +trace blog.ruan.host
+</span></code></pre></td></tr></table></div></figure>
+
+<h2 id="ns-">单独查询每一级域名的 NS 记录</h2>
+
+<figure class="code"><figcaption><span></span></figcaption><div class="highlight"><table><tr><td class="gutter"><pre class="line-numbers"><span class="line-number">1</span>
+<span class="line-number">2</span>
+<span class="line-number">3</span>
+<span class="line-number">4</span>
+<span class="line-number">5</span>
+<span class="line-number">6</span>
+</pre></td><td class="code"><pre><code class="bash"><span class="line">dig ns com.
+</span><span class="line">dig ns host.
+</span><span class="line">dig ns ruan.host.
+</span><span class="line">
+</span><span class="line">dig +short ns com.
+</span><span class="line">dig +short ns ruan.host.
+</span></code></pre></td></tr></table></div></figure>
+
+<h2 id="section-3">反向查询</h2>
+
+<figure class="code"><figcaption><span></span></figcaption><div class="highlight"><table><tr><td class="gutter"><pre class="line-numbers"><span class="line-number">1</span>
+</pre></td><td class="code"><pre><code class="bash"><span class="line">dig -x 128.199.183.19
+</span></code></pre></td></tr></table></div></figure>
+
+</div>
+  
+  
+
+
+    </article>
+  
+  <div class="pagination">
     
     <a href="/blog/archives">Blog Archives</a>
     
@@ -1134,23 +761,23 @@ TVB 里香港的街道，菜场，码头，劏屋，渔村这些场景从小就�
   <ul id="recent_posts">
     
       <li class="post">
-        <a href="/blog/2016/12/19/tcpip/">Tcpip</a>
-      </li>
-    
-      <li class="post">
         <a href="/blog/2016/12/05/netty-bytebuf/">ByteBuf in Netty</a>
       </li>
     
       <li class="post">
-        <a href="/blog/2016/11/30/top/">Top</a>
+        <a href="/blog/2016/09/14/ssh/">Ssh</a>
       </li>
     
       <li class="post">
-        <a href="/blog/2016/09/22/openssl/">Openssl</a>
+        <a href="/blog/2016/08/26/python-grammar/">Python 语法拾遗</a>
       </li>
     
       <li class="post">
-        <a href="/blog/2016/09/20/socat/">Socat</a>
+        <a href="/blog/2016/08/24/emacs-python-env/">Setup Python Env for Emacs</a>
+      </li>
+    
+      <li class="post">
+        <a href="/blog/2016/06/25/hongkong-trip-2016/">HeartWalk Hongkong</a>
       </li>
     
   </ul>
@@ -1158,9 +785,8 @@ TVB 里香港的街道，菜场，码头，劏屋，渔村这些场景从小就�
 <section>
   <h1>Categories</h1>
   <ul id="categories">
-    <li class='category'><a href='/blog/categories/cli/'>cli (6)</a></li>
-<li class='category'><a href='/blog/categories/java/'>java (2)</a></li>
-<li class='category'><a href='/blog/categories/linux/'>linux (2)</a></li>
+    <li class='category'><a href='/blog/categories/cli/'>cli (2)</a></li>
+<li class='category'><a href='/blog/categories/java/'>java (1)</a></li>
 <li class='category'><a href='/blog/categories/netty/'>netty (1)</a></li>
 <li class='category'><a href='/blog/categories/python/'>python (2)</a></li>
 <li class='category'><a href='/blog/categories/trip/'>trip (1)</a></li>
