@@ -2,11 +2,11 @@
 #      Main Configs       #
 # ----------------------- #
 
-url: http://
+url: http://ruanhao.github.io
 title: Hao Ruan's 博客
 subtitle: 用简单的语言记录生活与技术
 author: Hao Ruan
-simple_search: https://www.google.com/search
+# simple_search: https://www.google.com/search
 keywords: linux, emacs, shell, erlang, python, java
 description: hacker blog about technology and life
 
