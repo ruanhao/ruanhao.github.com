@@ -2,10 +2,10 @@
 <feed xmlns="http://www.w3.org/2005/Atom">
 
   <title><![CDATA[Category: Utils | Hao Ruan's 博客]]></title>
-  <link href="http:///blog/categories/utils/atom.xml" rel="self"/>
-  <link href="http:///"/>
-  <updated>2017-08-05T12:30:11+08:00</updated>
-  <id>http:///</id>
+  <link href="http://ruanhao.github.io/blog/categories/utils/atom.xml" rel="self"/>
+  <link href="http://ruanhao.github.io/"/>
+  <updated>2017-08-05T12:33:36+08:00</updated>
+  <id>http://ruanhao.github.io/</id>
   <author>
     <name><![CDATA[Hao Ruan]]></name>
     
@@ -15,9 +15,9 @@
   
   <entry>
     <title type="html"><![CDATA[SSH Reverse Tunnel （反向通道）]]></title>
-    <link href="http:///blog/2016/09/14/ssh/"/>
+    <link href="http://ruanhao.github.io/blog/2016/09/14/ssh/"/>
     <updated>2016-09-14T14:35:45+08:00</updated>
-    <id>http:///blog/2016/09/14/ssh</id>
+    <id>http://ruanhao.github.io/blog/2016/09/14/ssh</id>
     <content type="html"><![CDATA[<h2 id="section">1, 基本原理</h2>
 
 <p>端口转发是一项很有用的技术，经常会用在开发，调试阶段，合理的运用这个技术能有效地提高工作效率，也能做出一些很巧妙的设计。</p>
