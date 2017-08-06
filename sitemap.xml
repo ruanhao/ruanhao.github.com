@@ -1,6 +1,10 @@
 <?xml version="1.0" encoding="UTF-8"?>
 <urlset xmlns:xsi="http://www.w3.org/2001/XMLSchema-instance" xsi:schemaLocation="http://www.sitemaps.org/schemas/sitemap/0.9 http://www.sitemaps.org/schemas/sitemap/0.9/sitemap.xsd" xmlns="http://www.sitemaps.org/schemas/sitemap/0.9">
 <url>
+<loc>http://ruanhao.github.io/blog/2017/08/06/browse-log-by-highlight/</loc>
+<lastmod>2017-08-06T19:59:36+08:00</lastmod>
+</url>
+<url>
 <loc>http://ruanhao.github.io/blog/2016/09/14/ssh/</loc>
 <lastmod>2016-09-14T14:35:45+08:00</lastmod>
 </url>
@@ -22,7 +26,7 @@
 <loc>http://ruanhao.github.io/blog/categories/other/</loc>
 </url>
 <url>
-<loc>http://ruanhao.github.io/blog/categories/python/</loc>
+<loc>http://ruanhao.github.io/blog/categories/emacs/</loc>
 </url>
 <url>
 <loc>http://ruanhao.github.io/blog/categories/utils/</loc>

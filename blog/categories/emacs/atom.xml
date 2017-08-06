@@ -1,0 +1,61 @@
+<?xml version="1.0" encoding="utf-8"?>
+<feed xmlns="http://www.w3.org/2005/Atom">
+
+  <title><![CDATA[Category: Emacs | Hao Ruan's 博客]]></title>
+  <link href="http://ruanhao.github.io/blog/categories/emacs/atom.xml" rel="self"/>
+  <link href="http://ruanhao.github.io/"/>
+  <updated>2017-08-06T21:48:41+08:00</updated>
+  <id>http://ruanhao.github.io/</id>
+  <author>
+    <name><![CDATA[Hao Ruan]]></name>
+    
+  </author>
+  <generator uri="http://octopress.org/">Octopress</generator>
+
+  
+  <entry>
+    <title type="html"><![CDATA[使用 Emacs 编写 Python 脚本]]></title>
+    <link href="http://ruanhao.github.io/blog/2016/08/24/emacs-python-env/"/>
+    <updated>2016-08-24T17:40:28+08:00</updated>
+    <id>http://ruanhao.github.io/blog/2016/08/24/emacs-python-env</id>
+    <content type="html"><![CDATA[<h2 id="section">前言</h2>
+
+<p>使用终端编辑器编写脚本类语言是一件很爽的事情，编辑速度快，Ctrl-Z 就能立马调试运行看到效果。
+不过像 Python 这样的高级脚本语言，有着各式各样的库，要记住所有的模块名，函数名基本不可能，
+因此需要添加代码提示功能，提高编辑效率。</p>
+
+<p><span class="fluo">说明 </span>：并不是建议大家一定要使用 Emacs 或者 Vim ，使用 PyCharm 开发 Python 效率也很高，
+如果是开发大型工程，或者是团队合作，请根据实际情况选择合适的开发工具。
+不过，如果只是一些随写随用的脚本，何不尝试下 Emacs 呢？</p>
+
+<h2 id="section-1">插件配置</h2>
+
+<p>试了下几种常见 Emacs Python 插件，感觉 <a href="https://github.com/jorgenschaefer/elpy">Elpy</a> 不论是配置还是使用，
+都比较简单和轻量化。</p>
+
+<p>在 <span class="fluo">~/.emacs.d/init.el </span> 文件中添加一下配置代码：（需事先安装 use-package）</p>
+
+<p>``` lisp
+(use-package elpy
+  :defer t
+  :init (with-eval-after-load ‘python (elpy-enable)))</p>
+
+<p>(add-hook ‘elpy-mode-hook
+          (lambda ()
+            (define-key elpy-mode-map (kbd “M-.”)     ‘elpy-goto-definition)
+            (define-key elpy-mode-map (kbd “C-x M-.”) ‘elpy-goto-definition-other-window)
+            (define-key elpy-mode-map (kbd “M-,”)     ‘pop-tag-mark)
+            (define-key elpy-mode-map (kbd “M-RET”)   ‘elpy-company-backend)))
+```</p>
+
+<p>这样就可以了，使用 <span class="fluo">Meta-. </span> 和 <span class="fluo">Meta-, </span> 查看函数定义和回退，
+使用 <span class="fluo">Ctrl-x Meta-. </span> 在新窗口查看函数定义，
+使用 <span class="fluo">Meta-Enter </span> 手动显示代码提示。（默认在句号后，自动显示代码提示）</p>
+
+<h2 id="section-2">效果</h2>
+
+<p><img src="/images/examples/emacs_py_env.gif"></p>
+]]></content>
+  </entry>
+  
+</feed>
