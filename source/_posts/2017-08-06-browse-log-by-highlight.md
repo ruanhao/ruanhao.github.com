@@ -24,7 +24,7 @@ categories: utils
 
 `grep INFO xxx.log | grep exception`
 
-但这样关键词多起来，命令行就很长了，可以写个脚本简化下：（如果不嫌弃，可以复制我写的脚本，内容附于文末）
+但这样关键词多起来，就要写很多管道了，看上去比较丑陋。可以写个脚本简化下：（如果不嫌弃，可以 source 我的偷懒脚本，内容附于文末）
 
 `m -p INFO -p exception xxx.log`
 
