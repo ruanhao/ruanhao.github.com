@@ -9,24 +9,36 @@ categories: utils
 在桌面环境下，分析日志文件一般使用 TextEdit ，Sublime 等文本编辑工具，当需要查找特定的关键词时，Ctrl-F 或者 Command-F 即可。
 可是这种方式多多少少有点低效，因为还是有很多内容需要用肉眼过滤，很容易看花眼。
 
-习惯在 Linux 上进行开发的人，一般会使用 {%highlight grep %} 过滤出感兴趣的内容，大大缓解了眼疲劳。比如：
-过滤某个关键词可以使用 `grep -i <keyword> xxx.log` ，{%highlight -i %} 表示忽略大小写；过滤多个关键词可以使用 `grep '<kw1>\|<kw2>' xxx.log` ；
-反向过滤可以使用 {%highlight -v %} 选项；将空行过滤掉可以使用 `grep . xxx.log` 。总之，grep 的功能还是很强的，它也是我最喜欢的终端命令之一。
-{%highlight 建议 %}：尽可能使用高亮模式 `alias grep='grep --color=auto'`，这样能更快的找到关键词，提升视觉享受。
+习惯在 Linux 上进行开发的人，一般会使用 grep 过滤出感兴趣的内容，大大缓解了眼疲劳。比如：\\
+1. 过滤某个关键词可以使用 `grep -i <keyword> xxx.log` ，{%highlight -i %} 表示忽略大小写\\
+2. 过滤多个关键词可以使用 `grep '<kw1>\|<kw2>' xxx.log`\\
+3. 反向过滤可以使用 {%highlight -v %} 选项\\
+4. 将空行过滤掉可以使用 `grep . xxx.log`
 
-有时候分析日志文件时，需要查找某一行同时满足出现多个关键词的场景，
-这种情况出现的概率挺高的，比如需要找出等级为 INFO ，且同时出现 "exception" 关键词的日志，
-当然，可以这样搞：`grep INFO xxx.log | grep exception`。
+总之，grep 的功能还是很强的，它也是我最喜欢的终端命令之一。\\
+{%highlight 建议 %}：尽可能使用高亮模式 `grep --color=auto`，这样能更快的找到关键词，提升视觉享受。
+
+很多时候分析日志文件时，需要查找某一行同时出现多个关键词，\\
+这种应用场景在日志分析中出现的概率挺高的，比如需要找出等级为 INFO ，且同时出现 "exception" 关键词的日志，
+当然，可以这样搞：
+
+`grep INFO xxx.log | grep exception`
+
 但这样关键词多起来，命令行就很长了，可以写个脚本简化下：（如果不嫌弃，可以复制我写的脚本，内容附于文末）
-`m -p INFO -p exception xxx.log` 。
 
-这些功能，桌面环境下感觉不太好实现，我始终觉得分析日志还是在终端下舒服些，再配合 less ，emacs/vim ，简直事半功倍啊。
+`m -p INFO -p exception xxx.log`
+
+这些功能，桌面环境并不常见，我觉得分析日志还是在终端下会舒服些，再配合 less ，emacs/vim ，事半功倍。
 
 再安利个小脚本，还是上面那个例子，当搜索多个关键词时，如果能分别高亮那就再好不过了，对关键信息的过滤可以做到一目了然：
-`m -p INFO -p exception xxx.log | h INFO exception` ，效果如下：
+
+`m -p INFO -p exception xxx.log | h INFO exception`
+
+效果如下：
 
 {% img /images/examples/browse-log-under-term.png %}
 
+如果你比我还懒的话，可以再搞个脚本把 m 和 p 的功能结合起来，又能少打很多字母了 {%gemoji smile %} 
 
 ## multi-search: 
 
