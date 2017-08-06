@@ -4,7 +4,7 @@ title: "使用 Emacs 编写 Python 脚本"
 date: 2016-08-24 17:40:28 +0800
 description: python, emacs
 comments: true
-categories: PYTHON
+categories: emacs
 ---
 
 ## 前言
@@ -19,7 +19,7 @@ categories: PYTHON
 
 ## 插件配置
 
-试了下几种常见 Emacs Python 插件，感觉 [https://github.com/jorgenschaefer/elpy](Elpy) 不论是配置还是使用，
+试了下几种常见 Emacs Python 插件，感觉 [Elpy](https://github.com/jorgenschaefer/elpy) 不论是配置还是使用，
 都比较简单和轻量化。
 
 在 {%highlight ~/.emacs.d/init.el %} 文件中添加一下配置代码：（需事先安装 use-package）
