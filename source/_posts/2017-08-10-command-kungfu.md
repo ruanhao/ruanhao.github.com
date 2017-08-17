@@ -35,6 +35,17 @@ categories: utils
 - 删除前导空格\\
 `awk '{$1=$1}1' FILE`\\
 `echo $line | xargs`
+- 过滤文件收尾行
+``` sh
+head file.txt               # first 10 lines
+tail file.txt               # last 10 lines
+head -n 20 file.txt         # first 20 lines
+tail -n 20 file.txt         # last 20 lines
+head -20 file.txt           # first 20 lines
+tail -20 file.txt           # last 20 lines
+head -n -5 file.txt         # all lines except the 5 last
+tail -n +5 file.txt         # all lines except the 4 first, starts at line 5
+```
 
 
 
