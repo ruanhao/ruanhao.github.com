@@ -5,14 +5,14 @@
 <!--[if (gt IE 8)|(gt IEMobile 7)|!(IEMobile)|!(IE)]><!--><html class="no-js" lang="en"><!--<![endif]-->
 <head>
   <meta charset="utf-8">
-  <title>Blog Archive - Hao Ruan's 博客</title>
+  <title>有趣的命令行（之文件处理） - Hao Ruan's 博客</title>
   <meta name="author" content="Hao Ruan">
 
   
-  <meta name="description" content="Blog Archive 2017 有趣的命令行（之网络）
-Aug 19 2017 posted in utils 有趣的命令行（之系统信息）
-Aug 19 2017 posted in utils 有趣的命令行（之调试）
-Aug 19 2017 posted in utils 有趣的命令行（ &hellip;">
+  <meta name="description" content="列出系统中打开的大文件 1
+lsof / | awk '{ if($7 &gt; 1048576) print $7/1048576 "MB "$9 }' | sort -n -u | tail 反向删除文件 1
+rm !(*.foo|*.bar|*.baz) 遍历文件 1
+find -type &hellip;">
   
 
   <!-- http://t.co/dKP3o1e -->
@@ -21,7 +21,7 @@ Aug 19 2017 posted in utils 有趣的命令行（ &hellip;">
   <meta name="viewport" content="width=device-width, initial-scale=1">
 
   
-  <link rel="canonical" href="http://ruanhao.github.io/blog/archives/">
+  <link rel="canonical" href="http://ruanhao.github.io/blog/2017/08/19/command-kungfu-file/">
   <link href="/favicon.png" rel="icon">
   <link href="/stylesheets/screen.css" media="screen, projection" rel="stylesheet" type="text/css">
   <link href="/assets/font-awesome-4.6.3/css/font-awesome.min.css" media="screen, projection" rel="stylesheet" type="text/css">
@@ -99,165 +99,121 @@ Aug 19 2017 posted in utils 有趣的命令行（ &hellip;">
   <div id="main">
     <div id="content">
       <div>
-<article role="article">
+<article class="hentry" role="article">
   
   <header>
-    <h1 class="entry-title">Blog Archive</h1>
+    
+      <h1 class="entry-title">有趣的命令行（之文件处理）</h1>
+    
+    
+      <p class="meta">
+        
+
+
+
+
+<time class='entry-date' datetime='2017-08-19T23:17:14+08:00'><span class='date'><span class='date-month'>Aug</span> <span class='date-day'>19</span><span class='date-suffix'>th</span>, <span class='date-year'>2017</span></span> <span class='time'>11:17 pm</span></time>
+        
+      </p>
     
   </header>
-  
-  <div id="blog-archives">
 
 
+<div class="entry-content"><ul>
+  <li>列出系统中打开的大文件</li>
+</ul>
 
-  
-  <h2>2017</h2>
+<figure class="code"><div class="highlight"><table><tr><td class="gutter"><pre class="line-numbers"><span class="line-number">1</span>
+</pre></td><td class="code"><pre><code class=""><span class="line">lsof / | awk '{ if($7 &gt; 1048576) print $7/1048576 "MB "$9 }' | sort -n -u | tail</span></code></pre></td></tr></table></div></figure>
 
-<article>
-  
-<h1><a href="/blog/2017/08/19/command-kungfu-network/">有趣的命令行（之网络）</a></h1>
-<time datetime="2017-08-19T23:33:32+08:00" pubdate><span class='month'>Aug</span> <span class='day'>19</span> <span class='year'>2017</span></time>
+<ul>
+  <li>反向删除文件</li>
+</ul>
 
-<footer>
-  <span class="categories">posted in <a class='category' href='/blog/categories/utils/'>utils</a></span>
-</footer>
+<figure class="code"><div class="highlight"><table><tr><td class="gutter"><pre class="line-numbers"><span class="line-number">1</span>
+</pre></td><td class="code"><pre><code class=""><span class="line">rm !(*.foo|*.bar|*.baz)</span></code></pre></td></tr></table></div></figure>
 
+<ul>
+  <li>遍历文件</li>
+</ul>
 
-</article>
+<figure class="code"><div class="highlight"><table><tr><td class="gutter"><pre class="line-numbers"><span class="line-number">1</span>
+</pre></td><td class="code"><pre><code class=""><span class="line">find -type f -name "*.txt" | while read f; do echo "i have $f"; done</span></code></pre></td></tr></table></div></figure>
 
+<ul>
+  <li>打包目录并传至远端服务器</li>
+</ul>
 
+<figure class="code"><div class="highlight"><table><tr><td class="gutter"><pre class="line-numbers"><span class="line-number">1</span>
+<span class="line-number">2</span>
+</pre></td><td class="code"><pre><code class=""><span class="line">tar -c &lt;dir&gt; | gzip | ssh user@remote 'dd of=dir.tar.gz'
+</span><span class="line">tar -c &lt;dir&gt; | ssh -C user@remote 'cd /path &amp;&amp; tar -x -p'</span></code></pre></td></tr></table></div></figure>
 
-<article>
-  
-<h1><a href="/blog/2017/08/19/command-kungfu-info/">有趣的命令行（之系统信息）</a></h1>
-<time datetime="2017-08-19T23:30:35+08:00" pubdate><span class='month'>Aug</span> <span class='day'>19</span> <span class='year'>2017</span></time>
+<ul>
+  <li>打包离散文件</li>
+</ul>
 
-<footer>
-  <span class="categories">posted in <a class='category' href='/blog/categories/utils/'>utils</a></span>
-</footer>
+<figure class="code"><div class="highlight"><table><tr><td class="gutter"><pre class="line-numbers"><span class="line-number">1</span>
+</pre></td><td class="code"><pre><code class=""><span class="line">find . -name '*.txt' | tar -c --files-from=- | bzip2 &gt; dir_txt.tar.bz2</span></code></pre></td></tr></table></div></figure>
 
+<ul>
+  <li>备份整个硬盘至远端服务器</li>
+</ul>
 
-</article>
-
-
-
-<article>
-  
-<h1><a href="/blog/2017/08/19/command-kungfu-debug/">有趣的命令行（之调试）</a></h1>
-<time datetime="2017-08-19T23:28:13+08:00" pubdate><span class='month'>Aug</span> <span class='day'>19</span> <span class='year'>2017</span></time>
-
-<footer>
-  <span class="categories">posted in <a class='category' href='/blog/categories/utils/'>utils</a></span>
-</footer>
-
-
-</article>
-
-
-
-<article>
-  
-<h1><a href="/blog/2017/08/19/command-kungfu-file/">有趣的命令行（之文件处理）</a></h1>
-<time datetime="2017-08-19T23:17:14+08:00" pubdate><span class='month'>Aug</span> <span class='day'>19</span> <span class='year'>2017</span></time>
-
-<footer>
-  <span class="categories">posted in <a class='category' href='/blog/categories/utils/'>utils</a></span>
-</footer>
-
-
-</article>
-
-
-
-<article>
-  
-<h1><a href="/blog/2017/08/19/command-kungfu-text/">有趣的命令行（之文本处理）</a></h1>
-<time datetime="2017-08-19T18:21:13+08:00" pubdate><span class='month'>Aug</span> <span class='day'>19</span> <span class='year'>2017</span></time>
-
-<footer>
-  <span class="categories">posted in <a class='category' href='/blog/categories/utils/'>utils</a></span>
-</footer>
-
-
-</article>
-
-
-
-<article>
-  
-<h1><a href="/blog/2017/08/10/command-kungfu/">有趣的命令行</a></h1>
-<time datetime="2017-08-10T16:52:15+08:00" pubdate><span class='month'>Aug</span> <span class='day'>10</span> <span class='year'>2017</span></time>
-
-<footer>
-  <span class="categories">posted in <a class='category' href='/blog/categories/utils/'>utils</a></span>
-</footer>
-
-
-</article>
-
-
-
-<article>
-  
-<h1><a href="/blog/2017/08/06/browse-log-by-highlight/">在终端下分析日志文件</a></h1>
-<time datetime="2017-08-06T19:59:36+08:00" pubdate><span class='month'>Aug</span> <span class='day'>06</span> <span class='year'>2017</span></time>
-
-<footer>
-  <span class="categories">posted in <a class='category' href='/blog/categories/utils/'>utils</a></span>
-</footer>
-
-
-</article>
-
-
-
-  
-  <h2>2016</h2>
-
-<article>
-  
-<h1><a href="/blog/2016/09/14/ssh/">SSH Reverse Tunnel （反向通道）</a></h1>
-<time datetime="2016-09-14T14:35:45+08:00" pubdate><span class='month'>Sep</span> <span class='day'>14</span> <span class='year'>2016</span></time>
-
-<footer>
-  <span class="categories">posted in <a class='category' href='/blog/categories/utils/'>utils</a></span>
-</footer>
-
-
-</article>
-
-
-
-<article>
-  
-<h1><a href="/blog/2016/08/24/emacs-python-env/">使用 Emacs 编写 Python 脚本</a></h1>
-<time datetime="2016-08-24T17:40:28+08:00" pubdate><span class='month'>Aug</span> <span class='day'>24</span> <span class='year'>2016</span></time>
-
-<footer>
-  <span class="categories">posted in <a class='category' href='/blog/categories/emacs/'>emacs</a></span>
-</footer>
-
-
-</article>
-
-
-
-<article>
-  
-<h1><a href="/blog/2016/06/25/hongkong-trip-2016/">HeartWalk Hongkong</a></h1>
-<time datetime="2016-06-25T09:44:27+08:00" pubdate><span class='month'>Jun</span> <span class='day'>25</span> <span class='year'>2016</span></time>
-
-<footer>
-  <span class="categories">posted in <a class='category' href='/blog/categories/other/'>other</a></span>
-</footer>
-
-
-</article>
-
+<figure class="code"><div class="highlight"><table><tr><td class="gutter"><pre class="line-numbers"><span class="line-number">1</span>
+</pre></td><td class="code"><pre><code class=""><span class="line">dd bs=1M if=/dev/sda | gzip | ssh user@remote 'dd of=sda.gz'</span></code></pre></td></tr></table></div></figure>
 </div>
 
+
+  <footer>
+    <p class="meta">
+      
   
+
+<span class="byline author vcard">Posted by <span class="fn">Hao Ruan</span></span>
+
+      
+
+
+
+
+<time class='entry-date' datetime='2017-08-19T23:17:14+08:00'><span class='date'><span class='date-month'>Aug</span> <span class='date-day'>19</span><span class='date-suffix'>th</span>, <span class='date-year'>2017</span></span> <span class='time'>11:17 pm</span></time>
+      
+
+<span class="categories">
+  
+    <a class='category' href='/blog/categories/utils/'>utils</a>
+  
+</span>
+
+
+    </p>
+    
+      <div class="sharing">
+  
+  
+  
+    <div class="fb-like" data-send="true" data-width="450" data-show-faces="false"></div>
+  
+</div>
+
+    
+    <p class="meta">
+      
+        <a class="basic-alignment left" href="/blog/2017/08/19/command-kungfu-text/" title="Previous Post: 有趣的命令行（之文本处理）">&laquo; 有趣的命令行（之文本处理）</a>
+      
+      
+        <a class="basic-alignment right" href="/blog/2017/08/19/command-kungfu-debug/" title="Next Post: 有趣的命令行（之调试）">有趣的命令行（之调试） &raquo;</a>
+      
+    </p>
+  </footer>
 </article>
+
+  <section>
+    <h1>Comments</h1>
+    <div id="disqus_thread" aria-live="polite"><noscript>Please enable JavaScript to view the <a href="http://disqus.com/?ref_noscript">comments powered by Disqus.</a></noscript>
+</div>
+  </section>
 
 </div>
 
@@ -374,7 +330,10 @@ Aug 19 2017 posted in utils 有趣的命令行（ &hellip;">
       var disqus_shortname = 'ruanhao';
       
         
-        var disqus_script = 'count.js';
+        // var disqus_developer = 1;
+        var disqus_identifier = 'http://ruanhao.github.io/blog/2017/08/19/command-kungfu-file/';
+        var disqus_url = 'http://ruanhao.github.io/blog/2017/08/19/command-kungfu-file/';
+        var disqus_script = 'embed.js';
       
     (function () {
       var dsq = document.createElement('script'); dsq.type = 'text/javascript'; dsq.async = true;
