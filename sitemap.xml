@@ -1,30 +1,6 @@
 <?xml version="1.0" encoding="UTF-8"?>
 <urlset xmlns:xsi="http://www.w3.org/2001/XMLSchema-instance" xsi:schemaLocation="http://www.sitemaps.org/schemas/sitemap/0.9 http://www.sitemaps.org/schemas/sitemap/0.9/sitemap.xsd" xmlns="http://www.sitemaps.org/schemas/sitemap/0.9">
 <url>
-<loc>http://ruanhao.github.io/blog/2017/08/19/command-kungfu-network/</loc>
-<lastmod>2017-08-19T23:33:32+08:00</lastmod>
-</url>
-<url>
-<loc>http://ruanhao.github.io/blog/2017/08/19/command-kungfu-info/</loc>
-<lastmod>2017-08-19T23:30:35+08:00</lastmod>
-</url>
-<url>
-<loc>http://ruanhao.github.io/blog/2017/08/19/command-kungfu-debug/</loc>
-<lastmod>2017-08-19T23:28:13+08:00</lastmod>
-</url>
-<url>
-<loc>http://ruanhao.github.io/blog/2017/08/19/command-kungfu-file/</loc>
-<lastmod>2017-08-19T23:17:14+08:00</lastmod>
-</url>
-<url>
-<loc>http://ruanhao.github.io/blog/2017/08/19/command-kungfu-text/</loc>
-<lastmod>2017-08-19T18:21:13+08:00</lastmod>
-</url>
-<url>
-<loc>http://ruanhao.github.io/blog/2017/08/10/command-kungfu/</loc>
-<lastmod>2017-08-10T16:52:15+08:00</lastmod>
-</url>
-<url>
 <loc>http://ruanhao.github.io/blog/2017/08/06/browse-log-by-highlight/</loc>
 <lastmod>2017-08-06T19:59:36+08:00</lastmod>
 </url>

@@ -4,7 +4,7 @@
   <title><![CDATA[Category: Utils | Hao Ruan's 博客]]></title>
   <link href="http://ruanhao.github.io/blog/categories/utils/atom.xml" rel="self"/>
   <link href="http://ruanhao.github.io/"/>
-  <updated>2017-08-20T00:02:12+08:00</updated>
+  <updated>2017-09-02T16:35:56+08:00</updated>
   <id>http://ruanhao.github.io/</id>
   <author>
     <name><![CDATA[Hao Ruan]]></name>
@@ -14,302 +14,240 @@
 
   
   <entry>
-    <title type="html"><![CDATA[有趣的命令行（之网络）]]></title>
-    <link href="http://ruanhao.github.io/blog/2017/08/19/command-kungfu-network/"/>
-    <updated>2017-08-19T23:33:32+08:00</updated>
-    <id>http://ruanhao.github.io/blog/2017/08/19/command-kungfu-network</id>
-    <content type="html"><![CDATA[<ul>
-  <li>扫描网段中的主机</li>
-</ul>
+    <title type="html"><![CDATA[在终端下分析日志文件]]></title>
+    <link href="http://ruanhao.github.io/blog/2017/08/06/browse-log-by-highlight/"/>
+    <updated>2017-08-06T19:59:36+08:00</updated>
+    <id>http://ruanhao.github.io/blog/2017/08/06/browse-log-by-highlight</id>
+    <content type="html"><![CDATA[<p>在桌面环境下，分析日志文件一般使用 TextEdit ，Sublime 等文本编辑工具，当需要查找特定的关键词时，Ctrl-F 或者 Command-F 即可。
+可是这种方式多多少少有点低效，因为还是有很多内容需要用肉眼过滤，很容易看花眼。</p>
 
-<p><code>
-nmap -sP 192.168.1.0/24  ## list alive hosts in specific subnet
+<p>习惯在 Linux 上进行开发的人，一般会使用 grep 过滤出感兴趣的内容，大大缓解了眼疲劳。比如：<br />
+1. 过滤某个关键词可以使用 <code>grep -i &lt;keyword&gt; xxx.log</code> ，<span class="fluo">-i </span> 表示忽略大小写<br />
+2. 过滤多个关键词可以使用 <code>grep '&lt;kw1&gt;\|&lt;kw2&gt;' xxx.log</code><br />
+3. 反向过滤可以使用 <span class="fluo">-v </span> 选项<br />
+4. 将空行过滤掉可以使用 <code>grep . xxx.log</code></p>
+
+<p>总之，grep 的功能还是很强的，它也是我最喜欢的终端命令之一。<br />
+<span class="fluo">建议 </span>：尽可能使用高亮模式 <code>grep --color=auto</code>，这样能更快的找到关键词，提升视觉享受。</p>
+
+<p>很多时候分析日志文件时，需要查找某一行同时出现多个关键词，<br />
+这种应用场景在日志分析中出现的概率挺高的，比如需要找出等级为 INFO ，且同时出现 “exception” 关键词的日志，
+当然，可以这样搞：</p>
+
+<p><code>grep INFO xxx.log | grep exception</code></p>
+
+<p>但这样关键词多起来，就要写很多管道了，看上去比较丑陋。可以写个脚本简化下：（如果不嫌弃，可以 source 我的偷懒脚本，内容附于文末）</p>
+
+<p><code>m -p INFO -p exception xxx.log</code></p>
+
+<p>这些功能，桌面环境并不常见，我觉得分析日志还是在终端下会舒服些，再配合 less ，emacs/vim ，事半功倍。</p>
+
+<p>再安利个小脚本，还是上面那个例子，当搜索多个关键词时，如果能分别高亮那就再好不过了，对关键信息的过滤可以做到一目了然：</p>
+
+<p><code>m -p INFO -p exception xxx.log | h INFO exception</code></p>
+
+<p>效果如下：</p>
+
+<p><img src="/images/examples/browse-log-under-term.png"></p>
+
+<p>如果你比我还懒的话，可以再搞个脚本把 m 和 p 的功能结合起来，又能少打很多字母了 <img alt="smile" src="/images/emoji/unicode/1f604.png" class="emoji" /></p>
+
+<h2 id="multi-search">multi-search:</h2>
+
+<p><code>sh
+function m () { 
+    function _usage () 
+    { 
+        echo "usage: COMMAND [-inHRp] -p&lt;pattern1&gt; -p&lt;pattern2&gt; &lt;filename&gt;";
+        echo "-i : ignore case";
+        echo "-n : show line number";
+        echo "-H : show filename";
+        echo "-h : show header";
+        echo "-p : specify pattern";
+        echo "-R : search recursively"
+    };
+    declare -a patterns;
+    local ignorecase_flag recursive_flag filename linum header_flag colon result OPTIND;
+    while getopts "iHhnRp:" opt; do
+        case $opt in 
+            i)
+                ignorecase_flag=true
+            ;;
+            H)
+                filename="FILENAME,"
+            ;;
+            n)
+                linum="NR,"
+            ;;
+            p)
+                patterns+=("$OPTARG")
+            ;;
+            h)
+                header_flag=true
+            ;;
+            R)
+                recursive_flag=true
+            ;;
+            \?)
+                _usage;
+                return
+            ;;
+        esac;
+    done;
+    if [[ -n $filename || -n $linum ]]; then
+        colon="\":\",";
+    fi;
+    shift $(( $OPTIND - 1 ));
+    if [[ $ignorecase_flag == true ]]; then
+        for s in "${patterns[@]}";
+        do
+            result+=" &amp;&amp; s~/${s,,}/";
+        done;
+        result=${result# &amp;&amp; };
+        result="{s=tolower(\$0)} $result";
+    else
+        for s in "${patterns[@]}";
+        do
+            result="$result &amp;&amp; /$s/";
+        done;
+        result=${result# &amp;&amp; };
+    fi;
+    result+=" { print "$filename$linum$colon"\$0 }";
+    if [[ ! -t 0 ]]; then
+        cat - | awk "${result}";
+    else
+        for f in "$@";
+        do
+            if [[ -d $f ]]; then
+                if [[ $recursive_flag == true ]]; then
+                    find -L $f -not -path '*/\.*' -type f -print0 2&gt; /dev/null | while IFS= read -r -d '' ff; do
+                        if file "$ff" | grep --color=auto --line-buffered -q "text"; then
+                            [[ $header_flag == true ]] &amp;&amp; echo "########## processing $ff ##########";
+                            awk "${result}" "$ff";
+                        fi;
+                    done;
+                fi;
+            else
+                if file "$f" | grep --color=auto --line-buffered -q "text"; then
+                    [[ $header_flag == true ]] &amp;&amp; echo "########## processing $f ##########";
+                    awk "${result}" "$f";
+                fi;
+            fi;
+        done;
+    fi
+}
 </code></p>
 
-<ul>
-  <li>设置网卡速率</li>
-</ul>
+<h2 id="highlight--ackhttpsbeyondgrepcom-">highlight: （需要先安装 <a href="https://beyondgrep.com/">ack</a> )</h2>
 
-<p><code>
-ethtool --change eth0 autoneg off speed 100 duplex full
+<p><code>sh
+function h () { 
+    function _usage () 
+    { 
+        echo "usage: YOUR_COMMAND | h [-idn] args...
+	-i : ignore case
+	-d : disable regexp
+	-n : invert colors"
+    };
+    local _OPTS OPTIND;
+    if test -t 0; then
+        _usage;
+        return;
+    fi;
+    while getopts ":idnQ" opt; do
+        case $opt in 
+            i)
+                _OPTS+=" -i "
+            ;;
+            d)
+                _OPTS+=" -Q "
+            ;;
+            n)
+                n_flag=true
+            ;;
+            Q)
+                _OPTS+=" -Q "
+            ;;
+            \?)
+                _usage;
+                return
+            ;;
+        esac;
+    done;
+    shift $(($OPTIND - 1));
+    if (( ${#@} &gt; 12)); then
+        echo "Too many terms. h supports a maximum of 12 groups. Consider relying on regular expression supported patterns like \"word1\\|word2\"";
+        exit -1;
+    fi;
+    [[ -n $ZSH_VERSION ]] &amp;&amp; setopt localoptions &amp;&amp; setopt ksharrays &amp;&amp; setopt ignorebraces;
+    local _i=0;
+    if [ -z $n_flag ]; then
+        _COLORS=("underline bold red" "underline bold green" "underline bold yellow" "underline bold blue" "underline bold magenta" "underline bold cyan" "bold on_red" "bold on_green" "bold black on_yellow" "bold on_blue" "bold on_cyan" "bold on_magenta");
+    else
+        _COLORS=("bold on_red" "bold on_green" "bold black on_yellow" "bold on_blue" "bold on_magenta" "bold on_cyan" "bold black on_white" "underline bold red" "underline bold green" "underline bold yellow" "underline bold blue" "underline bold magenta");
+    fi;
+    for keyword in "$@";
+    do
+        local _COMMAND=$_COMMAND"ack $_OPTS --noenv --flush --passthru --color --color-match=\"${_COLORS[$_i]}\" '$keyword' |";
+        _i=$_i+1;
+    done;
+    _COMMAND=${_COMMAND%?};
+    cat - | eval $_COMMAND
+}
 </code></p>
 
-<ul>
-  <li>设置无线网卡速率</li>
-</ul>
-
-<p><code>
-iwconfig eth1 rate 1Mb/s fixed
-</code></p>
 ]]></content>
   </entry>
   
   <entry>
-    <title type="html"><![CDATA[有趣的命令行（之系统信息）]]></title>
-    <link href="http://ruanhao.github.io/blog/2017/08/19/command-kungfu-info/"/>
-    <updated>2017-08-19T23:30:35+08:00</updated>
-    <id>http://ruanhao.github.io/blog/2017/08/19/command-kungfu-info</id>
-    <content type="html"><![CDATA[<ul>
-  <li>挂载信息</li>
-</ul>
+    <title type="html"><![CDATA[SSH Reverse Tunnel （反向通道）]]></title>
+    <link href="http://ruanhao.github.io/blog/2016/09/14/ssh/"/>
+    <updated>2016-09-14T14:35:45+08:00</updated>
+    <id>http://ruanhao.github.io/blog/2016/09/14/ssh</id>
+    <content type="html"><![CDATA[<h2 id="section">1, 基本原理</h2>
 
-<p><code>
-mount | column -t
-</code></p>
+<p>端口转发是一项很有用的技术，经常会用在开发，调试阶段，合理的运用这个技术能有效地提高工作效率，也能做出一些很巧妙的设计。</p>
 
-<ul>
-  <li>块设备信息</li>
-</ul>
+<p>SSH 对于大多数开发者来说并不陌生，也是登录一台主机的主要手段，但 SSH 也是可以用于实现端口转发功能的。</p>
 
-<p><code>
-lsblk -f
-</code></p>
+<p>这里不打算介绍使用 SSH 实现本地端口转发，因为用 SSH 来做这个事情显得有些怪异，命令写出来也很不直观。
+可以用 Nginx ，iptables 实现相同的功能，有时我也会使用 netcat 或者 socat 来快速搭建一条转发通道以便调试，
+比如：<code>socat tcp-l:localhost:8080 tcp:localhost:80</code> 就完成了本地 8080 到 80 的端口转发。
+当然如果想对转发的内容进行加密的话，使用 SSH 也是不错的选择。（也可以使用 socat openssl-connect 功能）</p>
 
-<ul>
-  <li>内核模块目录</li>
-</ul>
+<p>相比本地端口转发，基于 SSH 的反向通道转发功能（Reverse Tunnel / Call Home Tunnel）用得比较少，原理也不是很直观，
+我第一次接触 -R 这个选项完全不明白这是用来干嘛的，但其实这个功能很有用。</p>
 
-<p><code>
-/lib/modules/$(uname -r)/kernel
-</code></p>
+<p><img src="/images/examples/ssh-remote-forward-topo.png"></p>
 
-<ul>
-  <li>终端信息</li>
-</ul>
+<p>如上图所示，主机 A 位于实验室的局域网内，通过路由器的 NAT 访问广域网，工作站位于广域网中。
+若想让工作站访问主机 A ，通过本地端口转发的方式显然不行，因为工作站无法通过内网地址（192.168.1.3）找到局域网内的主机。</p>
 
-<p><code>
-tput longname
-</code>
-- 内核模块依赖关系</p>
+<p>这时就必须使用 Reverse Tunnel 功能了，由内网的主机发起，与外网的工作站建立 TCP 连接，之后所有的转发内容就能够走在这条 TCP 连接上了。
+因为转发通道是由目的端主机发起建立的，所以是 <span class="fluo">Reverse </span>。</p>
 
-<p><code>
-lsmod | perl -e 'print "digraph \"lsmod\" {";&lt;&gt;;while(&lt;&gt;){@_=split/\s+/; print "\"$_[0]\" -&gt; \"$_\"\n" for split/,/,$_[3]}print "}"' | dot -Tpng | display -
-</code>
-- 磁盘信息</p>
+<h2 id="section-1">2, 用法介绍</h2>
 
-<p><code>
-file -s /dev/sd*
-</code></p>
+<p><img src="/images/examples/ssh-remote-forward-local.png"></p>
 
-<ul>
-  <li>操作系统位数</li>
-</ul>
+<p><code>ssh -N -f -R 8888:localhost:22 &lt;user-of-workstation&gt;@128.199.183.20</code></p>
 
-<p><code>
-getconf LONG_BIT
-getconf -a ## 显示所有信息
-</code></p>
-]]></content>
-  </entry>
-  
-  <entry>
-    <title type="html"><![CDATA[有趣的命令行（之调试）]]></title>
-    <link href="http://ruanhao.github.io/blog/2017/08/19/command-kungfu-debug/"/>
-    <updated>2017-08-19T23:28:13+08:00</updated>
-    <id>http://ruanhao.github.io/blog/2017/08/19/command-kungfu-debug</id>
-    <content type="html"><![CDATA[<ul>
-  <li>截获进程的输入输出</li>
-</ul>
+<p>-N 表示只连接主机，不打开 shell 。-f 表示连接成功后，转入后台运行，这样就可以在不中断连接的情况下，在本地 shell 中执行其他操作。</p>
 
-<p><code>
-strace -ff -e trace=write -e write=1,2 -p &lt;pid&gt;
-</code></p>
+<p>-R 表示建立一条反向通道，在 128.199.183.20 上监听 8888 端口，该端口上收到的数据通过反向通道传递到主机 A 上，并继而转发到 localhost:22 ，
+在这里即为主机 A 的 22 端口，因此实现了工作站 8888 端口到主机 A 22 端口的映射。
+在工作站上运行 <code>ssh -p 8888 &lt;user-of-host-A&gt;@127.0.0.1</code> 即可登录内网主机 A ，这在测试内网环境时带来很大的方便。
+也可以有这样一种应用场景：先在公司内部建立一条与家中电脑的反向通道，这样就可以在家中访问公司网络了。</p>
 
-<ul>
-  <li>查看共享库依赖</li>
-</ul>
+<p>也可以使用得更灵活些，比如主机 B 没有 ssh 服务，但是想在外网访问其 8080 端口，这时可以利用主机 A 做个转发：
+<code>ssh -N -f -R 8888:192.168.1.2:8080 &lt;user-of-workstation&gt;@128.199.183.20</code>，效果如下图所示：</p>
 
-<p><code>
-ldd &lt;executable_file
-</code></p>
+<p><img src="/images/examples/ssh-remote-forward-hop.png"></p>
 
-<ul>
-  <li>查看待写入磁盘数据大小</li>
-</ul>
+<p><span class="fluo">注意 </span>：ssh 在工作站上监听的端口 8888 是绑定在 localhost 上的，就是说只能在工作站上才能访问的到，
+如果想开放成一个服务端口让网络中的其他主机也能访问到，需要做些额外的手脚，比如：
+<code>socat tcp-l:localhost:9999 tcp:localhost:8888</code> 。</p>
 
-<p><code>
-grep ^Dirty /proc/meminfo
-</code></p>
-
-<ul>
-  <li>查看内存中数据</li>
-</ul>
-
-<p><code>
-strings /dev/mem
-</code></p>
-]]></content>
-  </entry>
-  
-  <entry>
-    <title type="html"><![CDATA[有趣的命令行（之文件处理）]]></title>
-    <link href="http://ruanhao.github.io/blog/2017/08/19/command-kungfu-file/"/>
-    <updated>2017-08-19T23:17:14+08:00</updated>
-    <id>http://ruanhao.github.io/blog/2017/08/19/command-kungfu-file</id>
-    <content type="html"><![CDATA[<ul>
-  <li>列出系统中打开的大文件</li>
-</ul>
-
-<p><code>
-lsof / | awk '{ if($7 &gt; 1048576) print $7/1048576 "MB "$9 }' | sort -n -u | tail
-</code></p>
-
-<ul>
-  <li>反向删除文件</li>
-</ul>
-
-<p><code>
-rm !(*.foo|*.bar|*.baz)
-</code></p>
-
-<ul>
-  <li>遍历文件</li>
-</ul>
-
-<p><code>
-find -type f -name "*.txt" | while read f; do echo "i have $f"; done
-</code></p>
-
-<ul>
-  <li>打包目录并传至远端服务器</li>
-</ul>
-
-<p><code>
-tar -c &lt;dir&gt; | gzip | ssh user@remote 'dd of=dir.tar.gz'
-tar -c &lt;dir&gt; | ssh -C user@remote 'cd /path &amp;&amp; tar -x -p'
-</code></p>
-
-<ul>
-  <li>打包离散文件</li>
-</ul>
-
-<p><code>
-find . -name '*.txt' | tar -c --files-from=- | bzip2 &gt; dir_txt.tar.bz2
-</code></p>
-
-<ul>
-  <li>备份整个硬盘至远端服务器</li>
-</ul>
-
-<p><code>
-dd bs=1M if=/dev/sda | gzip | ssh user@remote 'dd of=sda.gz'
-</code></p>
-]]></content>
-  </entry>
-  
-  <entry>
-    <title type="html"><![CDATA[有趣的命令行（之文本处理）]]></title>
-    <link href="http://ruanhao.github.io/blog/2017/08/19/command-kungfu-text/"/>
-    <updated>2017-08-19T18:21:13+08:00</updated>
-    <id>http://ruanhao.github.io/blog/2017/08/19/command-kungfu-text</id>
-    <content type="html"><![CDATA[<ul>
-  <li>打印水平分隔符</li>
-</ul>
-
-<p><code>
-printf '%100s\n' | tr ' ' =
-</code></p>
-
-<ul>
-  <li>打印文件某一行</li>
-</ul>
-
-<p><code>
-sed -n '1000p;1000q' &lt;filename&gt;
-</code></p>
-
-<ul>
-  <li>打印文件某几行</li>
-</ul>
-
-<p><code>
-sed -n '10,20p;20q' &lt;filename&gt;
-</code></p>
-
-<ul>
-  <li>生成随机数</li>
-</ul>
-
-<p><code>
-head -c4 /dev/urandom | od -An -tu4
-</code></p>
-
-<ul>
-  <li>重复生成单词</li>
-</ul>
-
-<p><code>
-echo hello{,,,}
-</code></p>
-
-<ul>
-  <li>大小写转换</li>
-</ul>
-
-<p><code>
-echo ${var^^}
-echo ${var,,}
-tr '[:lower:]' '[:upper:]'
-</code></p>
-
-<ul>
-  <li>过滤不可打印字符</li>
-</ul>
-
-<p><code>
-tr -dc '[:print:]' &lt;/dev/urandom
-</code></p>
-
-<ul>
-  <li>查看字符的二进制表示</li>
-</ul>
-
-<p>```
-echo ★  | hexdump -C</p>
-
-<p>showkey -a
-```</p>
-
-<ul>
-  <li>删除空行</li>
-</ul>
-
-<p><code>
-grep .
-awk NF
-</code></p>
-
-<ul>
-  <li>删除前导空格</li>
-</ul>
-
-<p><code>
-awk '{$1=$1}1' FILE
-echo $line | xargs
-</code></p>
-
-<ul>
-  <li>跳过文件首尾行</li>
-</ul>
-
-<p><code>
-head file.txt               # 开始 10 行
-tail file.txt               # 最后 10 行
-head -n 20 file.txt         # 开始 20 行
-tail -n 20 file.txt         # 最后 20 行
-head -20 file.txt           # 开始 20 行
-tail -20 file.txt           # 最后 20 行
-head -n -5 file.txt         # 排除最后 5 行
-tail -n +5 file.txt         # 从第 5 行开始到最后
-</code></p>
-
-<ul>
-  <li>为 man 建立 pdf</li>
-</ul>
-
-<p><code>
-man -t &lt;command&gt; | ps2pdf - &gt; filename.pdf
-</code></p>
 ]]></content>
   </entry>
   

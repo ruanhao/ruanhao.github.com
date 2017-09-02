@@ -9,9 +9,8 @@
   <meta name="author" content="Hao Ruan">
 
   
-  <meta name="description" content="扫描网段中的主机 1
-nmap -sP 192.168.1.0/24 ## list alive hosts in specific subnet 设置网卡速率 1
-ethtool --change eth0 autoneg off speed 100 duplex full 设置无线网卡速率 &hellip;">
+  <meta name="description" content="在桌面环境下，分析日志文件一般使用 TextEdit ，Sublime 等文本编辑工具，当需要查找特定的关键词时，Ctrl-F 或者 Command-F 即可。
+可是这种方式多多少少有点低效，因为还是有很多内容需要用肉眼过滤，很容易看花眼。 习惯在 Linux 上进行开发的人，一般会使用 grep &hellip;">
   
 
   <!-- http://t.co/dKP3o1e -->
@@ -105,7 +104,7 @@ ethtool --change eth0 autoneg off speed 100 duplex full 设置无线网卡速率
       
   <header>
     
-      <h1 class="entry-title"><a href="/blog/2017/08/19/command-kungfu-network/">有趣的命令行（之网络）</a></h1>
+      <h1 class="entry-title"><a href="/blog/2017/08/06/browse-log-by-highlight/">在终端下分析日志文件</a></h1>
     
     
       <p class="meta">
@@ -114,350 +113,50 @@ ethtool --change eth0 autoneg off speed 100 duplex full 设置无线网卡速率
 
 
 
-<time class='entry-date' datetime='2017-08-19T23:33:32+08:00'><span class='date'><span class='date-month'>Aug</span> <span class='date-day'>19</span><span class='date-suffix'>th</span>, <span class='date-year'>2017</span></span> <span class='time'>11:33 pm</span></time>
+<time class='entry-date' datetime='2017-08-06T19:59:36+08:00'><span class='date'><span class='date-month'>Aug</span> <span class='date-day'>6</span><span class='date-suffix'>th</span>, <span class='date-year'>2017</span></span> <span class='time'>7:59 pm</span></time>
         
       </p>
     
   </header>
 
 
-  <div class="entry-content"><ul>
-  <li>扫描网段中的主机</li>
-</ul>
+  <div class="entry-content"><p>在桌面环境下，分析日志文件一般使用 TextEdit ，Sublime 等文本编辑工具，当需要查找特定的关键词时，Ctrl-F 或者 Command-F 即可。
+可是这种方式多多少少有点低效，因为还是有很多内容需要用肉眼过滤，很容易看花眼。</p>
 
-<figure class="code"><div class="highlight"><table><tr><td class="gutter"><pre class="line-numbers"><span class="line-number">1</span>
-</pre></td><td class="code"><pre><code class=""><span class="line">nmap -sP 192.168.1.0/24  ## list alive hosts in specific subnet</span></code></pre></td></tr></table></div></figure>
+<p>习惯在 Linux 上进行开发的人，一般会使用 grep 过滤出感兴趣的内容，大大缓解了眼疲劳。比如：<br />
+1. 过滤某个关键词可以使用 <code>grep -i &lt;keyword&gt; xxx.log</code> ，<span class="fluo">-i </span> 表示忽略大小写<br />
+2. 过滤多个关键词可以使用 <code>grep '&lt;kw1&gt;\|&lt;kw2&gt;' xxx.log</code><br />
+3. 反向过滤可以使用 <span class="fluo">-v </span> 选项<br />
+4. 将空行过滤掉可以使用 <code>grep . xxx.log</code></p>
 
-<ul>
-  <li>设置网卡速率</li>
-</ul>
+<p>总之，grep 的功能还是很强的，它也是我最喜欢的终端命令之一。<br />
+<span class="fluo">建议 </span>：尽可能使用高亮模式 <code>grep --color=auto</code>，这样能更快的找到关键词，提升视觉享受。</p>
 
-<figure class="code"><div class="highlight"><table><tr><td class="gutter"><pre class="line-numbers"><span class="line-number">1</span>
-</pre></td><td class="code"><pre><code class=""><span class="line">ethtool --change eth0 autoneg off speed 100 duplex full</span></code></pre></td></tr></table></div></figure>
+<p>很多时候分析日志文件时，需要查找某一行同时出现多个关键词，<br />
+这种应用场景在日志分析中出现的概率挺高的，比如需要找出等级为 INFO ，且同时出现 “exception” 关键词的日志，
+当然，可以这样搞：</p>
 
-<ul>
-  <li>设置无线网卡速率</li>
-</ul>
+<p><code>grep INFO xxx.log | grep exception</code></p>
 
-<figure class="code"><div class="highlight"><table><tr><td class="gutter"><pre class="line-numbers"><span class="line-number">1</span>
-</pre></td><td class="code"><pre><code class=""><span class="line">iwconfig eth1 rate 1Mb/s fixed</span></code></pre></td></tr></table></div></figure>
-</div>
-  
-  
+<p>但这样关键词多起来，就要写很多管道了，看上去比较丑陋。可以写个脚本简化下：（如果不嫌弃，可以 source 我的偷懒脚本，内容附于文末）</p>
 
+<p><code>m -p INFO -p exception xxx.log</code></p>
 
-    </article>
-  
-  
-    <article>
-      
-  <header>
-    
-      <h1 class="entry-title"><a href="/blog/2017/08/19/command-kungfu-info/">有趣的命令行（之系统信息）</a></h1>
-    
-    
-      <p class="meta">
-        
+<p>这些功能，桌面环境并不常见，我觉得分析日志还是在终端下会舒服些，再配合 less ，emacs/vim ，事半功倍。</p>
 
+<p>再安利个小脚本，还是上面那个例子，当搜索多个关键词时，如果能分别高亮那就再好不过了，对关键信息的过滤可以做到一目了然：</p>
 
+<p><code>m -p INFO -p exception xxx.log | h INFO exception</code></p>
 
+<p>效果如下：</p>
 
-<time class='entry-date' datetime='2017-08-19T23:30:35+08:00'><span class='date'><span class='date-month'>Aug</span> <span class='date-day'>19</span><span class='date-suffix'>th</span>, <span class='date-year'>2017</span></span> <span class='time'>11:30 pm</span></time>
-        
-      </p>
-    
-  </header>
+<p><img src="/images/examples/browse-log-under-term.png" /></p>
 
+<p>如果你比我还懒的话，可以再搞个脚本把 m 和 p 的功能结合起来，又能少打很多字母了 <img alt="smile" src="/images/emoji/unicode/1f604.png" class="emoji" /></p>
 
-  <div class="entry-content"><ul>
-  <li>挂载信息</li>
-</ul>
+<h2 id="multi-search">multi-search:</h2>
 
-<figure class="code"><div class="highlight"><table><tr><td class="gutter"><pre class="line-numbers"><span class="line-number">1</span>
-</pre></td><td class="code"><pre><code class=""><span class="line">mount | column -t</span></code></pre></td></tr></table></div></figure>
-
-<ul>
-  <li>块设备信息</li>
-</ul>
-
-<figure class="code"><div class="highlight"><table><tr><td class="gutter"><pre class="line-numbers"><span class="line-number">1</span>
-</pre></td><td class="code"><pre><code class=""><span class="line">lsblk -f</span></code></pre></td></tr></table></div></figure>
-
-<ul>
-  <li>内核模块目录</li>
-</ul>
-
-<figure class="code"><div class="highlight"><table><tr><td class="gutter"><pre class="line-numbers"><span class="line-number">1</span>
-</pre></td><td class="code"><pre><code class=""><span class="line">/lib/modules/$(uname -r)/kernel</span></code></pre></td></tr></table></div></figure>
-
-<ul>
-  <li>终端信息</li>
-</ul>
-
-<figure class="code"><div class="highlight"><table><tr><td class="gutter"><pre class="line-numbers"><span class="line-number">1</span>
-</pre></td><td class="code"><pre><code class=""><span class="line">tput longname</span></code></pre></td></tr></table></div></figure>
-<ul>
-  <li>内核模块依赖关系</li>
-</ul>
-
-<figure class="code"><div class="highlight"><table><tr><td class="gutter"><pre class="line-numbers"><span class="line-number">1</span>
-</pre></td><td class="code"><pre><code class=""><span class="line">lsmod | perl -e 'print "digraph \"lsmod\" {";&lt;&gt;;while(&lt;&gt;){@_=split/\s+/; print "\"$_[0]\" -&gt; \"$_\"\n" for split/,/,$_[3]}print "}"' | dot -Tpng | display -</span></code></pre></td></tr></table></div></figure>
-<ul>
-  <li>磁盘信息</li>
-</ul>
-
-<figure class="code"><div class="highlight"><table><tr><td class="gutter"><pre class="line-numbers"><span class="line-number">1</span>
-</pre></td><td class="code"><pre><code class=""><span class="line">file -s /dev/sd*</span></code></pre></td></tr></table></div></figure>
-
-<ul>
-  <li>操作系统位数</li>
-</ul>
-
-<figure class="code"><div class="highlight"><table><tr><td class="gutter"><pre class="line-numbers"><span class="line-number">1</span>
-<span class="line-number">2</span>
-</pre></td><td class="code"><pre><code class=""><span class="line">getconf LONG_BIT
-</span><span class="line">getconf -a ## 显示所有信息</span></code></pre></td></tr></table></div></figure>
-</div>
-  
-  
-
-
-    </article>
-  
-  
-    <article>
-      
-  <header>
-    
-      <h1 class="entry-title"><a href="/blog/2017/08/19/command-kungfu-debug/">有趣的命令行（之调试）</a></h1>
-    
-    
-      <p class="meta">
-        
-
-
-
-
-<time class='entry-date' datetime='2017-08-19T23:28:13+08:00'><span class='date'><span class='date-month'>Aug</span> <span class='date-day'>19</span><span class='date-suffix'>th</span>, <span class='date-year'>2017</span></span> <span class='time'>11:28 pm</span></time>
-        
-      </p>
-    
-  </header>
-
-
-  <div class="entry-content"><ul>
-  <li>截获进程的输入输出</li>
-</ul>
-
-<figure class="code"><div class="highlight"><table><tr><td class="gutter"><pre class="line-numbers"><span class="line-number">1</span>
-</pre></td><td class="code"><pre><code class=""><span class="line">strace -ff -e trace=write -e write=1,2 -p &lt;pid&gt;</span></code></pre></td></tr></table></div></figure>
-
-<ul>
-  <li>查看共享库依赖</li>
-</ul>
-
-<figure class="code"><div class="highlight"><table><tr><td class="gutter"><pre class="line-numbers"><span class="line-number">1</span>
-</pre></td><td class="code"><pre><code class=""><span class="line">ldd &lt;executable_file</span></code></pre></td></tr></table></div></figure>
-
-<ul>
-  <li>查看待写入磁盘数据大小</li>
-</ul>
-
-<figure class="code"><div class="highlight"><table><tr><td class="gutter"><pre class="line-numbers"><span class="line-number">1</span>
-</pre></td><td class="code"><pre><code class=""><span class="line">grep ^Dirty /proc/meminfo</span></code></pre></td></tr></table></div></figure>
-
-<ul>
-  <li>查看内存中数据</li>
-</ul>
-
-<figure class="code"><div class="highlight"><table><tr><td class="gutter"><pre class="line-numbers"><span class="line-number">1</span>
-</pre></td><td class="code"><pre><code class=""><span class="line">strings /dev/mem</span></code></pre></td></tr></table></div></figure>
-</div>
-  
-  
-
-
-    </article>
-  
-  
-    <article>
-      
-  <header>
-    
-      <h1 class="entry-title"><a href="/blog/2017/08/19/command-kungfu-file/">有趣的命令行（之文件处理）</a></h1>
-    
-    
-      <p class="meta">
-        
-
-
-
-
-<time class='entry-date' datetime='2017-08-19T23:17:14+08:00'><span class='date'><span class='date-month'>Aug</span> <span class='date-day'>19</span><span class='date-suffix'>th</span>, <span class='date-year'>2017</span></span> <span class='time'>11:17 pm</span></time>
-        
-      </p>
-    
-  </header>
-
-
-  <div class="entry-content"><ul>
-  <li>列出系统中打开的大文件</li>
-</ul>
-
-<figure class="code"><div class="highlight"><table><tr><td class="gutter"><pre class="line-numbers"><span class="line-number">1</span>
-</pre></td><td class="code"><pre><code class=""><span class="line">lsof / | awk '{ if($7 &gt; 1048576) print $7/1048576 "MB "$9 }' | sort -n -u | tail</span></code></pre></td></tr></table></div></figure>
-
-<ul>
-  <li>反向删除文件</li>
-</ul>
-
-<figure class="code"><div class="highlight"><table><tr><td class="gutter"><pre class="line-numbers"><span class="line-number">1</span>
-</pre></td><td class="code"><pre><code class=""><span class="line">rm !(*.foo|*.bar|*.baz)</span></code></pre></td></tr></table></div></figure>
-
-<ul>
-  <li>遍历文件</li>
-</ul>
-
-<figure class="code"><div class="highlight"><table><tr><td class="gutter"><pre class="line-numbers"><span class="line-number">1</span>
-</pre></td><td class="code"><pre><code class=""><span class="line">find -type f -name "*.txt" | while read f; do echo "i have $f"; done</span></code></pre></td></tr></table></div></figure>
-
-<ul>
-  <li>打包目录并传至远端服务器</li>
-</ul>
-
-<figure class="code"><div class="highlight"><table><tr><td class="gutter"><pre class="line-numbers"><span class="line-number">1</span>
-<span class="line-number">2</span>
-</pre></td><td class="code"><pre><code class=""><span class="line">tar -c &lt;dir&gt; | gzip | ssh user@remote 'dd of=dir.tar.gz'
-</span><span class="line">tar -c &lt;dir&gt; | ssh -C user@remote 'cd /path &amp;&amp; tar -x -p'</span></code></pre></td></tr></table></div></figure>
-
-<ul>
-  <li>打包离散文件</li>
-</ul>
-
-<figure class="code"><div class="highlight"><table><tr><td class="gutter"><pre class="line-numbers"><span class="line-number">1</span>
-</pre></td><td class="code"><pre><code class=""><span class="line">find . -name '*.txt' | tar -c --files-from=- | bzip2 &gt; dir_txt.tar.bz2</span></code></pre></td></tr></table></div></figure>
-
-<ul>
-  <li>备份整个硬盘至远端服务器</li>
-</ul>
-
-<figure class="code"><div class="highlight"><table><tr><td class="gutter"><pre class="line-numbers"><span class="line-number">1</span>
-</pre></td><td class="code"><pre><code class=""><span class="line">dd bs=1M if=/dev/sda | gzip | ssh user@remote 'dd of=sda.gz'</span></code></pre></td></tr></table></div></figure>
-</div>
-  
-  
-
-
-    </article>
-  
-  
-    <article>
-      
-  <header>
-    
-      <h1 class="entry-title"><a href="/blog/2017/08/19/command-kungfu-text/">有趣的命令行（之文本处理）</a></h1>
-    
-    
-      <p class="meta">
-        
-
-
-
-
-<time class='entry-date' datetime='2017-08-19T18:21:13+08:00'><span class='date'><span class='date-month'>Aug</span> <span class='date-day'>19</span><span class='date-suffix'>th</span>, <span class='date-year'>2017</span></span> <span class='time'>6:21 pm</span></time>
-        
-      </p>
-    
-  </header>
-
-
-  <div class="entry-content"><ul>
-  <li>打印水平分隔符</li>
-</ul>
-
-<figure class="code"><div class="highlight"><table><tr><td class="gutter"><pre class="line-numbers"><span class="line-number">1</span>
-</pre></td><td class="code"><pre><code class=""><span class="line">printf '%100s\n' | tr ' ' =</span></code></pre></td></tr></table></div></figure>
-
-<ul>
-  <li>打印文件某一行</li>
-</ul>
-
-<figure class="code"><div class="highlight"><table><tr><td class="gutter"><pre class="line-numbers"><span class="line-number">1</span>
-</pre></td><td class="code"><pre><code class=""><span class="line">sed -n '1000p;1000q' &lt;filename&gt;</span></code></pre></td></tr></table></div></figure>
-
-<ul>
-  <li>打印文件某几行</li>
-</ul>
-
-<figure class="code"><div class="highlight"><table><tr><td class="gutter"><pre class="line-numbers"><span class="line-number">1</span>
-</pre></td><td class="code"><pre><code class=""><span class="line">sed -n '10,20p;20q' &lt;filename&gt;</span></code></pre></td></tr></table></div></figure>
-
-<ul>
-  <li>生成随机数</li>
-</ul>
-
-<figure class="code"><div class="highlight"><table><tr><td class="gutter"><pre class="line-numbers"><span class="line-number">1</span>
-</pre></td><td class="code"><pre><code class=""><span class="line">head -c4 /dev/urandom | od -An -tu4</span></code></pre></td></tr></table></div></figure>
-
-<ul>
-  <li>重复生成单词</li>
-</ul>
-
-<figure class="code"><div class="highlight"><table><tr><td class="gutter"><pre class="line-numbers"><span class="line-number">1</span>
-</pre></td><td class="code"><pre><code class=""><span class="line">echo hello{,,,}</span></code></pre></td></tr></table></div></figure>
-
-<ul>
-  <li>大小写转换</li>
-</ul>
-
-<figure class="code"><div class="highlight"><table><tr><td class="gutter"><pre class="line-numbers"><span class="line-number">1</span>
-<span class="line-number">2</span>
-<span class="line-number">3</span>
-</pre></td><td class="code"><pre><code class=""><span class="line">echo ${var^^}
-</span><span class="line">echo ${var,,}
-</span><span class="line">tr '[:lower:]' '[:upper:]'</span></code></pre></td></tr></table></div></figure>
-
-<ul>
-  <li>过滤不可打印字符</li>
-</ul>
-
-<figure class="code"><div class="highlight"><table><tr><td class="gutter"><pre class="line-numbers"><span class="line-number">1</span>
-</pre></td><td class="code"><pre><code class=""><span class="line">tr -dc '[:print:]' &lt;/dev/urandom</span></code></pre></td></tr></table></div></figure>
-
-<ul>
-  <li>查看字符的二进制表示</li>
-</ul>
-
-<figure class="code"><div class="highlight"><table><tr><td class="gutter"><pre class="line-numbers"><span class="line-number">1</span>
-<span class="line-number">2</span>
-<span class="line-number">3</span>
-</pre></td><td class="code"><pre><code class=""><span class="line">echo ★  | hexdump -C
-</span><span class="line">
-</span><span class="line">showkey -a</span></code></pre></td></tr></table></div></figure>
-
-<ul>
-  <li>删除空行</li>
-</ul>
-
-<figure class="code"><div class="highlight"><table><tr><td class="gutter"><pre class="line-numbers"><span class="line-number">1</span>
-<span class="line-number">2</span>
-</pre></td><td class="code"><pre><code class=""><span class="line">grep .
-</span><span class="line">awk NF</span></code></pre></td></tr></table></div></figure>
-
-<ul>
-  <li>删除前导空格</li>
-</ul>
-
-<figure class="code"><div class="highlight"><table><tr><td class="gutter"><pre class="line-numbers"><span class="line-number">1</span>
-<span class="line-number">2</span>
-</pre></td><td class="code"><pre><code class=""><span class="line">awk '{$1=$1}1' FILE
-</span><span class="line">echo $line | xargs</span></code></pre></td></tr></table></div></figure>
-
-<ul>
-  <li>跳过文件首尾行</li>
-</ul>
-
-<figure class="code"><div class="highlight"><table><tr><td class="gutter"><pre class="line-numbers"><span class="line-number">1</span>
+<figure class="code"><figcaption><span></span></figcaption><div class="highlight"><table><tr><td class="gutter"><pre class="line-numbers"><span class="line-number">1</span>
 <span class="line-number">2</span>
 <span class="line-number">3</span>
 <span class="line-number">4</span>
@@ -465,21 +164,705 @@ ethtool --change eth0 autoneg off speed 100 duplex full 设置无线网卡速率
 <span class="line-number">6</span>
 <span class="line-number">7</span>
 <span class="line-number">8</span>
-</pre></td><td class="code"><pre><code class=""><span class="line">head file.txt               # 开始 10 行
-</span><span class="line">tail file.txt               # 最后 10 行
-</span><span class="line">head -n 20 file.txt         # 开始 20 行
-</span><span class="line">tail -n 20 file.txt         # 最后 20 行
-</span><span class="line">head -20 file.txt           # 开始 20 行
-</span><span class="line">tail -20 file.txt           # 最后 20 行
-</span><span class="line">head -n -5 file.txt         # 排除最后 5 行
-</span><span class="line">tail -n +5 file.txt         # 从第 5 行开始到最后</span></code></pre></td></tr></table></div></figure>
+<span class="line-number">9</span>
+<span class="line-number">10</span>
+<span class="line-number">11</span>
+<span class="line-number">12</span>
+<span class="line-number">13</span>
+<span class="line-number">14</span>
+<span class="line-number">15</span>
+<span class="line-number">16</span>
+<span class="line-number">17</span>
+<span class="line-number">18</span>
+<span class="line-number">19</span>
+<span class="line-number">20</span>
+<span class="line-number">21</span>
+<span class="line-number">22</span>
+<span class="line-number">23</span>
+<span class="line-number">24</span>
+<span class="line-number">25</span>
+<span class="line-number">26</span>
+<span class="line-number">27</span>
+<span class="line-number">28</span>
+<span class="line-number">29</span>
+<span class="line-number">30</span>
+<span class="line-number">31</span>
+<span class="line-number">32</span>
+<span class="line-number">33</span>
+<span class="line-number">34</span>
+<span class="line-number">35</span>
+<span class="line-number">36</span>
+<span class="line-number">37</span>
+<span class="line-number">38</span>
+<span class="line-number">39</span>
+<span class="line-number">40</span>
+<span class="line-number">41</span>
+<span class="line-number">42</span>
+<span class="line-number">43</span>
+<span class="line-number">44</span>
+<span class="line-number">45</span>
+<span class="line-number">46</span>
+<span class="line-number">47</span>
+<span class="line-number">48</span>
+<span class="line-number">49</span>
+<span class="line-number">50</span>
+<span class="line-number">51</span>
+<span class="line-number">52</span>
+<span class="line-number">53</span>
+<span class="line-number">54</span>
+<span class="line-number">55</span>
+<span class="line-number">56</span>
+<span class="line-number">57</span>
+<span class="line-number">58</span>
+<span class="line-number">59</span>
+<span class="line-number">60</span>
+<span class="line-number">61</span>
+<span class="line-number">62</span>
+<span class="line-number">63</span>
+<span class="line-number">64</span>
+<span class="line-number">65</span>
+<span class="line-number">66</span>
+<span class="line-number">67</span>
+<span class="line-number">68</span>
+<span class="line-number">69</span>
+<span class="line-number">70</span>
+<span class="line-number">71</span>
+<span class="line-number">72</span>
+<span class="line-number">73</span>
+<span class="line-number">74</span>
+<span class="line-number">75</span>
+<span class="line-number">76</span>
+<span class="line-number">77</span>
+<span class="line-number">78</span>
+<span class="line-number">79</span>
+<span class="line-number">80</span>
+<span class="line-number">81</span>
+</pre></td><td class="code"><pre><code class="sh"><span class="line"><span class="k">function</span> m <span class="o">()</span> <span class="o">{</span>
+</span><span class="line">    <span class="k">function</span> _usage <span class="o">()</span>
+</span><span class="line">    <span class="o">{</span>
+</span><span class="line">        <span class="nb">echo</span> <span class="s2">&quot;usage: COMMAND [-inHRp] -p&lt;pattern1&gt; -p&lt;pattern2&gt; &lt;filename&gt;&quot;</span><span class="p">;</span>
+</span><span class="line">        <span class="nb">echo</span> <span class="s2">&quot;-i : ignore case&quot;</span><span class="p">;</span>
+</span><span class="line">        <span class="nb">echo</span> <span class="s2">&quot;-n : show line number&quot;</span><span class="p">;</span>
+</span><span class="line">        <span class="nb">echo</span> <span class="s2">&quot;-H : show filename&quot;</span><span class="p">;</span>
+</span><span class="line">        <span class="nb">echo</span> <span class="s2">&quot;-h : show header&quot;</span><span class="p">;</span>
+</span><span class="line">        <span class="nb">echo</span> <span class="s2">&quot;-p : specify pattern&quot;</span><span class="p">;</span>
+</span><span class="line">        <span class="nb">echo</span> <span class="s2">&quot;-R : search recursively&quot;</span>
+</span><span class="line">    <span class="o">}</span><span class="p">;</span>
+</span><span class="line">    <span class="nb">declare</span> -a patterns<span class="p">;</span>
+</span><span class="line">    <span class="nb">local </span>ignorecase_flag recursive_flag filename linum header_flag colon result OPTIND<span class="p">;</span>
+</span><span class="line">    <span class="k">while</span> <span class="nb">getopts</span> <span class="s2">&quot;iHhnRp:&quot;</span> opt<span class="p">;</span> <span class="k">do</span>
+</span><span class="line">        <span class="k">case</span> <span class="nv">$opt</span> in
+</span><span class="line">            i<span class="o">)</span>
+</span><span class="line">                <span class="nv">ignorecase_flag</span><span class="o">=</span><span class="nb">true</span>
+</span><span class="line">            <span class="p">;;</span>
+</span><span class="line">            H<span class="o">)</span>
+</span><span class="line">                <span class="nv">filename</span><span class="o">=</span><span class="s2">&quot;FILENAME,&quot;</span>
+</span><span class="line">            <span class="p">;;</span>
+</span><span class="line">            n<span class="o">)</span>
+</span><span class="line">                <span class="nv">linum</span><span class="o">=</span><span class="s2">&quot;NR,&quot;</span>
+</span><span class="line">            <span class="p">;;</span>
+</span><span class="line">            p<span class="o">)</span>
+</span><span class="line">                patterns+<span class="o">=(</span><span class="s2">&quot;$OPTARG&quot;</span><span class="o">)</span>
+</span><span class="line">            <span class="p">;;</span>
+</span><span class="line">            h<span class="o">)</span>
+</span><span class="line">                <span class="nv">header_flag</span><span class="o">=</span><span class="nb">true</span>
+</span><span class="line">            <span class="p">;;</span>
+</span><span class="line">            R<span class="o">)</span>
+</span><span class="line">                <span class="nv">recursive_flag</span><span class="o">=</span><span class="nb">true</span>
+</span><span class="line">            <span class="p">;;</span>
+</span><span class="line">            <span class="se">\?</span><span class="o">)</span>
+</span><span class="line">                _usage<span class="p">;</span>
+</span><span class="line">                <span class="k">return</span>
+</span><span class="line">            <span class="p">;;</span>
+</span><span class="line">        <span class="k">esac</span><span class="p">;</span>
+</span><span class="line">    <span class="k">done</span><span class="p">;</span>
+</span><span class="line">    <span class="k">if</span> <span class="o">[[</span> -n <span class="nv">$filename</span> <span class="o">||</span> -n <span class="nv">$linum</span> <span class="o">]]</span><span class="p">;</span> <span class="k">then</span>
+</span><span class="line">        <span class="nv">colon</span><span class="o">=</span><span class="s2">&quot;\&quot;:\&quot;,&quot;</span><span class="p">;</span>
+</span><span class="line">    <span class="k">fi</span><span class="p">;</span>
+</span><span class="line">    <span class="nb">shift</span> <span class="k">$((</span> <span class="nv">$OPTIND</span> <span class="o">-</span> <span class="m">1</span> <span class="k">))</span><span class="p">;</span>
+</span><span class="line">    <span class="k">if</span> <span class="o">[[</span> <span class="nv">$ignorecase_flag</span> <span class="o">==</span> <span class="nb">true</span> <span class="o">]]</span><span class="p">;</span> <span class="k">then</span>
+</span><span class="line">        <span class="k">for</span> s in <span class="s2">&quot;${patterns[@]}&quot;</span><span class="p">;</span>
+</span><span class="line">        <span class="k">do</span>
+</span><span class="line">            result+<span class="o">=</span><span class="s2">&quot; &amp;&amp; s~/${s,,}/&quot;</span><span class="p">;</span>
+</span><span class="line">        <span class="k">done</span><span class="p">;</span>
+</span><span class="line">        <span class="nv">result</span><span class="o">=</span><span class="k">${</span><span class="nv">result</span><span class="p"># &amp;&amp; </span><span class="k">}</span><span class="p">;</span>
+</span><span class="line">        <span class="nv">result</span><span class="o">=</span><span class="s2">&quot;{s=tolower(\$0)} $result&quot;</span><span class="p">;</span>
+</span><span class="line">    <span class="k">else</span>
+</span><span class="line">        <span class="k">for</span> s in <span class="s2">&quot;${patterns[@]}&quot;</span><span class="p">;</span>
+</span><span class="line">        <span class="k">do</span>
+</span><span class="line">            <span class="nv">result</span><span class="o">=</span><span class="s2">&quot;$result &amp;&amp; /$s/&quot;</span><span class="p">;</span>
+</span><span class="line">        <span class="k">done</span><span class="p">;</span>
+</span><span class="line">        <span class="nv">result</span><span class="o">=</span><span class="k">${</span><span class="nv">result</span><span class="p"># &amp;&amp; </span><span class="k">}</span><span class="p">;</span>
+</span><span class="line">    <span class="k">fi</span><span class="p">;</span>
+</span><span class="line">    result+<span class="o">=</span><span class="s2">&quot; { print &quot;</span><span class="nv">$filename$linum$colon</span><span class="s2">&quot;\$0 }&quot;</span><span class="p">;</span>
+</span><span class="line">    <span class="k">if</span> <span class="o">[[</span> ! -t <span class="m">0</span> <span class="o">]]</span><span class="p">;</span> <span class="k">then</span>
+</span><span class="line">        cat - <span class="p">|</span> awk <span class="s2">&quot;${result}&quot;</span><span class="p">;</span>
+</span><span class="line">    <span class="k">else</span>
+</span><span class="line">        <span class="k">for</span> f in <span class="s2">&quot;$@&quot;</span><span class="p">;</span>
+</span><span class="line">        <span class="k">do</span>
+</span><span class="line">            <span class="k">if</span> <span class="o">[[</span> -d <span class="nv">$f</span> <span class="o">]]</span><span class="p">;</span> <span class="k">then</span>
+</span><span class="line">                <span class="k">if</span> <span class="o">[[</span> <span class="nv">$recursive_flag</span> <span class="o">==</span> <span class="nb">true</span> <span class="o">]]</span><span class="p">;</span> <span class="k">then</span>
+</span><span class="line">                    find -L <span class="nv">$f</span> -not -path <span class="s1">&#39;*/\.*&#39;</span> -type f -print0 2&gt; /dev/null <span class="p">|</span> <span class="k">while</span> <span class="nv">IFS</span><span class="o">=</span> <span class="nb">read</span> -r -d <span class="s1">&#39;&#39;</span> ff<span class="p">;</span> <span class="k">do</span>
+</span><span class="line">                        <span class="k">if</span> file <span class="s2">&quot;$ff&quot;</span> <span class="p">|</span> grep --color<span class="o">=</span>auto --line-buffered -q <span class="s2">&quot;text&quot;</span><span class="p">;</span> <span class="k">then</span>
+</span><span class="line">                            <span class="o">[[</span> <span class="nv">$header_flag</span> <span class="o">==</span> <span class="nb">true</span> <span class="o">]]</span> <span class="o">&amp;&amp;</span> <span class="nb">echo</span> <span class="s2">&quot;########## processing $ff ##########&quot;</span><span class="p">;</span>
+</span><span class="line">                            awk <span class="s2">&quot;${result}&quot;</span> <span class="s2">&quot;$ff&quot;</span><span class="p">;</span>
+</span><span class="line">                        <span class="k">fi</span><span class="p">;</span>
+</span><span class="line">                    <span class="k">done</span><span class="p">;</span>
+</span><span class="line">                <span class="k">fi</span><span class="p">;</span>
+</span><span class="line">            <span class="k">else</span>
+</span><span class="line">                <span class="k">if</span> file <span class="s2">&quot;$f&quot;</span> <span class="p">|</span> grep --color<span class="o">=</span>auto --line-buffered -q <span class="s2">&quot;text&quot;</span><span class="p">;</span> <span class="k">then</span>
+</span><span class="line">                    <span class="o">[[</span> <span class="nv">$header_flag</span> <span class="o">==</span> <span class="nb">true</span> <span class="o">]]</span> <span class="o">&amp;&amp;</span> <span class="nb">echo</span> <span class="s2">&quot;########## processing $f ##########&quot;</span><span class="p">;</span>
+</span><span class="line">                    awk <span class="s2">&quot;${result}&quot;</span> <span class="s2">&quot;$f&quot;</span><span class="p">;</span>
+</span><span class="line">                <span class="k">fi</span><span class="p">;</span>
+</span><span class="line">            <span class="k">fi</span><span class="p">;</span>
+</span><span class="line">        <span class="k">done</span><span class="p">;</span>
+</span><span class="line">    <span class="k">fi</span>
+</span><span class="line"><span class="o">}</span>
+</span></code></pre></td></tr></table></div></figure>
 
-<ul>
-  <li>为 man 建立 pdf</li>
-</ul>
+<h2 id="highlight--ackhttpsbeyondgrepcom-">highlight: （需要先安装 <a href="https://beyondgrep.com/">ack</a> )</h2>
 
-<figure class="code"><div class="highlight"><table><tr><td class="gutter"><pre class="line-numbers"><span class="line-number">1</span>
-</pre></td><td class="code"><pre><code class=""><span class="line">man -t &lt;command&gt; | ps2pdf - &gt; filename.pdf</span></code></pre></td></tr></table></div></figure>
+<figure class="code"><figcaption><span></span></figcaption><div class="highlight"><table><tr><td class="gutter"><pre class="line-numbers"><span class="line-number">1</span>
+<span class="line-number">2</span>
+<span class="line-number">3</span>
+<span class="line-number">4</span>
+<span class="line-number">5</span>
+<span class="line-number">6</span>
+<span class="line-number">7</span>
+<span class="line-number">8</span>
+<span class="line-number">9</span>
+<span class="line-number">10</span>
+<span class="line-number">11</span>
+<span class="line-number">12</span>
+<span class="line-number">13</span>
+<span class="line-number">14</span>
+<span class="line-number">15</span>
+<span class="line-number">16</span>
+<span class="line-number">17</span>
+<span class="line-number">18</span>
+<span class="line-number">19</span>
+<span class="line-number">20</span>
+<span class="line-number">21</span>
+<span class="line-number">22</span>
+<span class="line-number">23</span>
+<span class="line-number">24</span>
+<span class="line-number">25</span>
+<span class="line-number">26</span>
+<span class="line-number">27</span>
+<span class="line-number">28</span>
+<span class="line-number">29</span>
+<span class="line-number">30</span>
+<span class="line-number">31</span>
+<span class="line-number">32</span>
+<span class="line-number">33</span>
+<span class="line-number">34</span>
+<span class="line-number">35</span>
+<span class="line-number">36</span>
+<span class="line-number">37</span>
+<span class="line-number">38</span>
+<span class="line-number">39</span>
+<span class="line-number">40</span>
+<span class="line-number">41</span>
+<span class="line-number">42</span>
+<span class="line-number">43</span>
+<span class="line-number">44</span>
+<span class="line-number">45</span>
+<span class="line-number">46</span>
+<span class="line-number">47</span>
+<span class="line-number">48</span>
+<span class="line-number">49</span>
+<span class="line-number">50</span>
+<span class="line-number">51</span>
+<span class="line-number">52</span>
+<span class="line-number">53</span>
+</pre></td><td class="code"><pre><code class="sh"><span class="line"><span class="k">function</span> h <span class="o">()</span> <span class="o">{</span>
+</span><span class="line">    <span class="k">function</span> _usage <span class="o">()</span>
+</span><span class="line">    <span class="o">{</span>
+</span><span class="line">        <span class="nb">echo</span> <span class="s2">&quot;usage: YOUR_COMMAND | h [-idn] args...</span>
+</span><span class="line"><span class="s2">	-i : ignore case</span>
+</span><span class="line"><span class="s2">	-d : disable regexp</span>
+</span><span class="line"><span class="s2">	-n : invert colors&quot;</span>
+</span><span class="line">    <span class="o">}</span><span class="p">;</span>
+</span><span class="line">    <span class="nb">local </span>_OPTS OPTIND<span class="p">;</span>
+</span><span class="line">    <span class="k">if</span> <span class="nb">test</span> -t 0<span class="p">;</span> <span class="k">then</span>
+</span><span class="line">        _usage<span class="p">;</span>
+</span><span class="line">        <span class="k">return</span><span class="p">;</span>
+</span><span class="line">    <span class="k">fi</span><span class="p">;</span>
+</span><span class="line">    <span class="k">while</span> <span class="nb">getopts</span> <span class="s2">&quot;:idnQ&quot;</span> opt<span class="p">;</span> <span class="k">do</span>
+</span><span class="line">        <span class="k">case</span> <span class="nv">$opt</span> in
+</span><span class="line">            i<span class="o">)</span>
+</span><span class="line">                _OPTS+<span class="o">=</span><span class="s2">&quot; -i &quot;</span>
+</span><span class="line">            <span class="p">;;</span>
+</span><span class="line">            d<span class="o">)</span>
+</span><span class="line">                _OPTS+<span class="o">=</span><span class="s2">&quot; -Q &quot;</span>
+</span><span class="line">            <span class="p">;;</span>
+</span><span class="line">            n<span class="o">)</span>
+</span><span class="line">                <span class="nv">n_flag</span><span class="o">=</span><span class="nb">true</span>
+</span><span class="line">            <span class="p">;;</span>
+</span><span class="line">            Q<span class="o">)</span>
+</span><span class="line">                _OPTS+<span class="o">=</span><span class="s2">&quot; -Q &quot;</span>
+</span><span class="line">            <span class="p">;;</span>
+</span><span class="line">            <span class="se">\?</span><span class="o">)</span>
+</span><span class="line">                _usage<span class="p">;</span>
+</span><span class="line">                <span class="k">return</span>
+</span><span class="line">            <span class="p">;;</span>
+</span><span class="line">        <span class="k">esac</span><span class="p">;</span>
+</span><span class="line">    <span class="k">done</span><span class="p">;</span>
+</span><span class="line">    <span class="nb">shift</span> <span class="k">$((</span><span class="nv">$OPTIND</span> <span class="o">-</span> <span class="m">1</span><span class="k">))</span><span class="p">;</span>
+</span><span class="line">    <span class="k">if</span> <span class="o">((</span> <span class="k">${#</span><span class="p">@</span><span class="k">}</span> &gt; 12<span class="o">))</span><span class="p">;</span> <span class="k">then</span>
+</span><span class="line">        <span class="nb">echo</span> <span class="s2">&quot;Too many terms. h supports a maximum of 12 groups. Consider relying on regular expression supported patterns like \&quot;word1\\|word2\&quot;&quot;</span><span class="p">;</span>
+</span><span class="line">        <span class="nb">exit</span> -1<span class="p">;</span>
+</span><span class="line">    <span class="k">fi</span><span class="p">;</span>
+</span><span class="line">    <span class="o">[[</span> -n <span class="nv">$ZSH_VERSION</span> <span class="o">]]</span> <span class="o">&amp;&amp;</span> setopt localoptions <span class="o">&amp;&amp;</span> setopt ksharrays <span class="o">&amp;&amp;</span> setopt ignorebraces<span class="p">;</span>
+</span><span class="line">    <span class="nb">local </span><span class="nv">_i</span><span class="o">=</span>0<span class="p">;</span>
+</span><span class="line">    <span class="k">if</span> <span class="o">[</span> -z <span class="nv">$n_flag</span> <span class="o">]</span><span class="p">;</span> <span class="k">then</span>
+</span><span class="line">        <span class="nv">_COLORS</span><span class="o">=(</span><span class="s2">&quot;underline bold red&quot;</span> <span class="s2">&quot;underline bold green&quot;</span> <span class="s2">&quot;underline bold yellow&quot;</span> <span class="s2">&quot;underline bold blue&quot;</span> <span class="s2">&quot;underline bold magenta&quot;</span> <span class="s2">&quot;underline bold cyan&quot;</span> <span class="s2">&quot;bold on_red&quot;</span> <span class="s2">&quot;bold on_green&quot;</span> <span class="s2">&quot;bold black on_yellow&quot;</span> <span class="s2">&quot;bold on_blue&quot;</span> <span class="s2">&quot;bold on_cyan&quot;</span> <span class="s2">&quot;bold on_magenta&quot;</span><span class="o">)</span><span class="p">;</span>
+</span><span class="line">    <span class="k">else</span>
+</span><span class="line">        <span class="nv">_COLORS</span><span class="o">=(</span><span class="s2">&quot;bold on_red&quot;</span> <span class="s2">&quot;bold on_green&quot;</span> <span class="s2">&quot;bold black on_yellow&quot;</span> <span class="s2">&quot;bold on_blue&quot;</span> <span class="s2">&quot;bold on_magenta&quot;</span> <span class="s2">&quot;bold on_cyan&quot;</span> <span class="s2">&quot;bold black on_white&quot;</span> <span class="s2">&quot;underline bold red&quot;</span> <span class="s2">&quot;underline bold green&quot;</span> <span class="s2">&quot;underline bold yellow&quot;</span> <span class="s2">&quot;underline bold blue&quot;</span> <span class="s2">&quot;underline bold magenta&quot;</span><span class="o">)</span><span class="p">;</span>
+</span><span class="line">    <span class="k">fi</span><span class="p">;</span>
+</span><span class="line">    <span class="k">for</span> keyword in <span class="s2">&quot;$@&quot;</span><span class="p">;</span>
+</span><span class="line">    <span class="k">do</span>
+</span><span class="line">        <span class="nb">local </span><span class="nv">_COMMAND</span><span class="o">=</span><span class="nv">$_COMMAND</span><span class="s2">&quot;ack $_OPTS --noenv --flush --passthru --color --color-match=\&quot;${_COLORS[$_i]}\&quot; &#39;$keyword&#39; |&quot;</span><span class="p">;</span>
+</span><span class="line">        <span class="nv">_i</span><span class="o">=</span><span class="nv">$_i</span>+1<span class="p">;</span>
+</span><span class="line">    <span class="k">done</span><span class="p">;</span>
+</span><span class="line">    <span class="nv">_COMMAND</span><span class="o">=</span><span class="k">${</span><span class="nv">_COMMAND</span><span class="p">%?</span><span class="k">}</span><span class="p">;</span>
+</span><span class="line">    cat - <span class="p">|</span> <span class="nb">eval</span> <span class="nv">$_COMMAND</span>
+</span><span class="line"><span class="o">}</span>
+</span></code></pre></td></tr></table></div></figure>
+
+</div>
+  
+  
+
+
+    </article>
+  
+  
+    <article>
+      
+  <header>
+    
+      <h1 class="entry-title"><a href="/blog/2016/09/14/ssh/">SSH Reverse Tunnel （反向通道）</a></h1>
+    
+    
+      <p class="meta">
+        
+
+
+
+
+<time class='entry-date' datetime='2016-09-14T14:35:45+08:00'><span class='date'><span class='date-month'>Sep</span> <span class='date-day'>14</span><span class='date-suffix'>th</span>, <span class='date-year'>2016</span></span> <span class='time'>2:35 pm</span></time>
+        
+      </p>
+    
+  </header>
+
+
+  <div class="entry-content"><h2 id="section">1, 基本原理</h2>
+
+<p>端口转发是一项很有用的技术，经常会用在开发，调试阶段，合理的运用这个技术能有效地提高工作效率，也能做出一些很巧妙的设计。</p>
+
+<p>SSH 对于大多数开发者来说并不陌生，也是登录一台主机的主要手段，但 SSH 也是可以用于实现端口转发功能的。</p>
+
+<p>这里不打算介绍使用 SSH 实现本地端口转发，因为用 SSH 来做这个事情显得有些怪异，命令写出来也很不直观。
+可以用 Nginx ，iptables 实现相同的功能，有时我也会使用 netcat 或者 socat 来快速搭建一条转发通道以便调试，
+比如：<code>socat tcp-l:localhost:8080 tcp:localhost:80</code> 就完成了本地 8080 到 80 的端口转发。
+当然如果想对转发的内容进行加密的话，使用 SSH 也是不错的选择。（也可以使用 socat openssl-connect 功能）</p>
+
+<p>相比本地端口转发，基于 SSH 的反向通道转发功能（Reverse Tunnel / Call Home Tunnel）用得比较少，原理也不是很直观，
+我第一次接触 -R 这个选项完全不明白这是用来干嘛的，但其实这个功能很有用。</p>
+
+<p><img src="/images/examples/ssh-remote-forward-topo.png" /></p>
+
+<p>如上图所示，主机 A 位于实验室的局域网内，通过路由器的 NAT 访问广域网，工作站位于广域网中。
+若想让工作站访问主机 A ，通过本地端口转发的方式显然不行，因为工作站无法通过内网地址（192.168.1.3）找到局域网内的主机。</p>
+
+<p>这时就必须使用 Reverse Tunnel 功能了，由内网的主机发起，与外网的工作站建立 TCP 连接，之后所有的转发内容就能够走在这条 TCP 连接上了。
+因为转发通道是由目的端主机发起建立的，所以是 <span class="fluo">Reverse </span>。</p>
+
+<h2 id="section-1">2, 用法介绍</h2>
+
+<p><img src="/images/examples/ssh-remote-forward-local.png" /></p>
+
+<p><code>ssh -N -f -R 8888:localhost:22 &lt;user-of-workstation&gt;@128.199.183.20</code></p>
+
+<p>-N 表示只连接主机，不打开 shell 。-f 表示连接成功后，转入后台运行，这样就可以在不中断连接的情况下，在本地 shell 中执行其他操作。</p>
+
+<p>-R 表示建立一条反向通道，在 128.199.183.20 上监听 8888 端口，该端口上收到的数据通过反向通道传递到主机 A 上，并继而转发到 localhost:22 ，
+在这里即为主机 A 的 22 端口，因此实现了工作站 8888 端口到主机 A 22 端口的映射。
+在工作站上运行 <code>ssh -p 8888 &lt;user-of-host-A&gt;@127.0.0.1</code> 即可登录内网主机 A ，这在测试内网环境时带来很大的方便。
+也可以有这样一种应用场景：先在公司内部建立一条与家中电脑的反向通道，这样就可以在家中访问公司网络了。</p>
+
+<p>也可以使用得更灵活些，比如主机 B 没有 ssh 服务，但是想在外网访问其 8080 端口，这时可以利用主机 A 做个转发：
+<code>ssh -N -f -R 8888:192.168.1.2:8080 &lt;user-of-workstation&gt;@128.199.183.20</code>，效果如下图所示：</p>
+
+<p><img src="/images/examples/ssh-remote-forward-hop.png" /></p>
+
+<p><span class="fluo">注意 </span>：ssh 在工作站上监听的端口 8888 是绑定在 localhost 上的，就是说只能在工作站上才能访问的到，
+如果想开放成一个服务端口让网络中的其他主机也能访问到，需要做些额外的手脚，比如：
+<code>socat tcp-l:localhost:9999 tcp:localhost:8888</code> 。</p>
+
+</div>
+  
+  
+
+
+    </article>
+  
+  
+    <article>
+      
+  <header>
+    
+      <h1 class="entry-title"><a href="/blog/2016/08/24/emacs-python-env/">使用 Emacs 编写 Python 脚本</a></h1>
+    
+    
+      <p class="meta">
+        
+
+
+
+
+<time class='entry-date' datetime='2016-08-24T17:40:28+08:00'><span class='date'><span class='date-month'>Aug</span> <span class='date-day'>24</span><span class='date-suffix'>th</span>, <span class='date-year'>2016</span></span> <span class='time'>5:40 pm</span></time>
+        
+      </p>
+    
+  </header>
+
+
+  <div class="entry-content"><h2 id="section">前言</h2>
+
+<p>使用终端编辑器编写脚本类语言是一件很爽的事情，编辑速度快，Ctrl-Z 就能立马调试运行看到效果。
+不过像 Python 这样的高级脚本语言，有着各式各样的库，要记住所有的模块名，函数名基本不可能，
+因此需要添加代码提示功能，提高编辑效率。</p>
+
+<p><span class="fluo">说明 </span>：并不是建议大家一定要使用 Emacs 或者 Vim ，使用 PyCharm 开发 Python 效率也很高，
+如果是开发大型工程，或者是团队合作，请根据实际情况选择合适的开发工具。
+不过，如果只是一些随写随用的脚本，何不尝试下 Emacs 呢？</p>
+
+<h2 id="section-1">插件配置</h2>
+
+<p>试了下几种常见 Emacs Python 插件，感觉 <a href="https://github.com/jorgenschaefer/elpy">Elpy</a> 不论是配置还是使用，
+都比较简单和轻量化。</p>
+
+<p>在 <span class="fluo">~/.emacs.d/init.el </span> 文件中添加一下配置代码：（需事先安装 use-package）</p>
+
+<figure class="code"><figcaption><span></span></figcaption><div class="highlight"><table><tr><td class="gutter"><pre class="line-numbers"><span class="line-number">1</span>
+<span class="line-number">2</span>
+<span class="line-number">3</span>
+<span class="line-number">4</span>
+<span class="line-number">5</span>
+<span class="line-number">6</span>
+<span class="line-number">7</span>
+<span class="line-number">8</span>
+<span class="line-number">9</span>
+<span class="line-number">10</span>
+</pre></td><td class="code"><pre><code class="lisp"><span class="line"><span class="p">(</span><span class="nb">use-package</span> <span class="nv">elpy</span>
+</span><span class="line">  <span class="ss">:defer</span> <span class="no">t</span>
+</span><span class="line">  <span class="ss">:init</span> <span class="p">(</span><span class="nv">with-eval-after-load</span> <span class="ss">&#39;python</span> <span class="p">(</span><span class="nv">elpy-enable</span><span class="p">)))</span>
+</span><span class="line">
+</span><span class="line"><span class="p">(</span><span class="nv">add-hook</span> <span class="ss">&#39;elpy-mode-hook</span>
+</span><span class="line">          <span class="p">(</span><span class="k">lambda</span> <span class="p">()</span>
+</span><span class="line">            <span class="p">(</span><span class="nv">define-key</span> <span class="nv">elpy-mode-map</span> <span class="p">(</span><span class="nv">kbd</span> <span class="s">&quot;M-.&quot;</span><span class="p">)</span>     <span class="ss">&#39;elpy-goto-definition</span><span class="p">)</span>
+</span><span class="line">            <span class="p">(</span><span class="nv">define-key</span> <span class="nv">elpy-mode-map</span> <span class="p">(</span><span class="nv">kbd</span> <span class="s">&quot;C-x M-.&quot;</span><span class="p">)</span> <span class="ss">&#39;elpy-goto-definition-other-window</span><span class="p">)</span>
+</span><span class="line">            <span class="p">(</span><span class="nv">define-key</span> <span class="nv">elpy-mode-map</span> <span class="p">(</span><span class="nv">kbd</span> <span class="s">&quot;M-,&quot;</span><span class="p">)</span>     <span class="ss">&#39;pop-tag-mark</span><span class="p">)</span>
+</span><span class="line">            <span class="p">(</span><span class="nv">define-key</span> <span class="nv">elpy-mode-map</span> <span class="p">(</span><span class="nv">kbd</span> <span class="s">&quot;M-RET&quot;</span><span class="p">)</span>   <span class="ss">&#39;elpy-company-backend</span><span class="p">)))</span>
+</span></code></pre></td></tr></table></div></figure>
+
+<p>这样就可以了，使用 <span class="fluo">Meta-. </span> 和 <span class="fluo">Meta-, </span> 查看函数定义和回退，
+使用 <span class="fluo">Ctrl-x Meta-. </span> 在新窗口查看函数定义，
+使用 <span class="fluo">Meta-Enter </span> 手动显示代码提示。（默认在句号后，自动显示代码提示）</p>
+
+<h2 id="section-2">效果</h2>
+
+<p><img src="/images/examples/emacs_py_env.gif" /></p>
+</div>
+  
+  
+
+
+    </article>
+  
+  
+    <article>
+      
+  <header>
+    
+      <h1 class="entry-title"><a href="/blog/2016/06/25/hongkong-trip-2016/">HeartWalk Hongkong</a></h1>
+    
+    
+      <p class="meta">
+        
+
+
+
+
+<time class='entry-date' datetime='2016-06-25T09:44:27+08:00'><span class='date'><span class='date-month'>Jun</span> <span class='date-day'>25</span><span class='date-suffix'>th</span>, <span class='date-year'>2016</span></span> <span class='time'>9:44 am</span></time>
+        
+      </p>
+    
+  </header>
+
+
+  <div class="entry-content"><p>一直以来对于香港这个地方怀有一份不一样的情愫，谈起香港，脑中浮现出的是小时候和父母一起追 TVB 电视剧的场景，
+因为在 1995 年左右，上海的电视台开始引进 TVB ，当时香港电视剧的质量明显好于大陆的电视剧，我们都很喜欢看。
+TVB 里香港的街道，菜场，码头，劏屋，渔村这些场景从小就深入我的记忆，这些关键词也是我对香港的印象。</p>
+
+<p>从鸦片战争起，两个城市就在商业，文化等多个领域开始往来，所以上海和香港在很多地方很像，早茶的悠闲与豆浆油条的适意，
+维港的华丽与外滩的优雅，钵典乍街的喧闹与弄堂的市井，这些都是香港和上海之间的联系。看到香港的现在，仿佛回到上海的从前，
+因为传统的海派文化在瞬息万变的经济发展中逐渐褪色。而香港仍在尽力维护着自己的自尊，
+虽然最终也许会事与愿违，但这份坚持却弥足珍贵。</p>
+
+<p>2013 年曾经去过一次香港，但由于行程紧张，没能很好的感受这个城市，而这次希望能找回记忆中的香港。</p>
+
+<h2 id="day-0">Day 0</h2>
+
+<p>在福建老家过完年后，我们经厦门到深圳，从福田口岸进入香港。很多港人白天在深圳上班，晚上返港休息，
+从深圳口岸到香港市区差不多要一个小时左右，地铁上的上班族都略显疲态，我们也因此体验了一把晚高峰。</p>
+
+<p><img class="rcorners" src="/images/hongkong/day0-mtr.jpg" width="400" height="600" /></p>
+
+<p>顺利到站佐敦，入住弥敦酒店。出了地铁，就被广府氛围所包围。上午还听着老婆的闽南话，而家人哋讲噉粤语，
+这种时空转换的感觉蛮有意思的 <img alt="smile" src="/images/emoji/unicode/1f604.png" class="emoji" /></p>
+
+<p>放下行李，我们就去庙街附近逛逛，顺便找吃的。庙街和城隍庙很像，都是些小玩意儿，工艺品，店主一般是上了年纪的大爷，
+据说这些店主已经积累了不少财富，摆摊只是为了消磨时间，因此他们都一副爱买不买的样子。庙街每天晚上 7:30 之后才开张，
+白天没人做生意，可见他们其实并不在意。我们和大多数游客一样，只看不买，就感受个气氛。</p>
+
+<p>后来在上海街的弄堂里七拐八弯找了一家食铺吃饭，就是那种 TVB 里经常看到的吃夜宵的小店，有皮蛋粥，云吞面，奶茶之类的。
+大爱牛腩捞面，硬硬的质感和碱水的味道会让人上瘾，还有港式奶茶，涩涩的香甜沁人心脾。</p>
+
+<p><img class="rcorners" src="/images/hongkong/day0-canteen.jpg" width="400" height="600" /></p>
+
+<h2 id="day-1">Day 1</h2>
+
+<p>今天的目的地是山顶，第一次去山顶是坐缆车，但今天我们想走上去。</p>
+
+<p>LV 曾经制作过一组 Audio Guide，讲述上海，香港，北京的故事，分别由陈冲，舒淇，巩俐独白。舒淇带着丰富情感的独白让人感受很深，
+如同身临其境般的置身香港的过去和现在。相比之下，陈冲的独白就显得很平淡了，有点像念书，
+完全没有把那种徜徉在梧桐树下的感觉表现出来。因为对 <a href="http://music.163.com/#/m/playlist?id=120996021">舒淇这张专辑</a> 印象深刻，所以也想去中环寻找旧时香港的影子。</p>
+
+<p>早上我们先在稻香用早茶。广东人喜欢喝早茶，有时可以喝到中午，一边喝早茶一边聊天或者和客户谈生意是他们的生活方式。
+坐下后，服务员会先问你要喝什么茶，有龙井，普洱可以选。随后他们会端上一个装满茶水的壶和一个大碗，
+你可以将茶杯，调羹，筷子放入大碗，然后用滚烫的茶水冲泡洗下，之后就可以开始饮茶点菜了。</p>
+
+<p><img class="rcorners" src="/images/hongkong/day1-daoxiang.jpg" width="400" height="600" /></p>
+
+<p>选择坐巴士去天星码头，坐在巴士二层，开在弥敦道上，欣赏晨光下的香港街道。</p>
+
+<p><img class="rcorners" src="/images/hongkong/day1-bus.jpg" width="600" height="400" /></p>
+
+<p>天气晴朗，在码头看对面的中环感觉非常棒，太平山，中环的建筑群，加上维多利亚港，构成了非常好看的风景。</p>
+
+<p><img class="rcorners" src="/images/hongkong/day1-pier.jpg" width="600" height="400" /></p>
+
+<p>天星码头很有历史气息，因为它看上去很旧，旧时的窗户，锈迹斑斑的栏杆，这样也蛮好，没必要任何事物都搞得很现代化。
+船上的座椅也很有意思，靠背是可以前后切换的，方便游客观看两岸的风景。</p>
+
+<p><img class="rcorners" src="/images/hongkong/day1-tianxing.jpg" width="600" height="400" /></p>
+
+<p><img class="rcorners" src="/images/hongkong/day1-tianxing2.jpg" width="600" height="400" /></p>
+
+<p>接着走到了士丹利街，史丹利街曾经是鸦片一条街，而鸦片成就了香港的经济神话，这条街可以说是见证了香港的繁荣。
+这里卖的鸦片并不是用来吸食的，而是作为一种香料，这也是香港得名的原因，芳香的港口。</p>
+
+<p>老一辈的香港人喜欢在史丹利街上的陆羽茶室喝茶，店里有好多镜子，木桌木椅，古朴的感觉。
+对面是振邦大厦，属于香港老一代的建筑，不高，这条街所有的建筑都不高。</p>
+
+<p><img class="rcorners" src="/images/hongkong/day1-lukyu.jpg" width="600" height="400" /></p>
+
+<p><img class="rcorners" src="/images/hongkong/day1-peter.jpg" width="400" height="600" /></p>
+
+<p>沿着史丹利街走，很快就会走到钵典乍街，也叫石板街，因为路面是一块块石板向上叠，很陡，这里是香港最古老的街道。
+街道两边有很多小店，大多是装饰品店，假发店，和裁缝铺。以前难民到香港后，有些会到钵典乍街做裁缝卖假发，因此在这里的都是老店。
+过去的钵典乍街可不像现在这么热闹，当时这条路是押犯人的，因为它连接着警察局和监狱。</p>
+
+<p><img class="rcorners" src="/images/hongkong/day1-shibanjie.jpg" width="600" height="400" /></p>
+
+<p>沿着石板街走会走到威灵顿街，以前这里有很多水手，商人和酒吧，也是香港岛上著名的红灯区。
+威灵顿街上能听到念经的声音，应该是有一个道教场所，好像是供奉先人和祭祖的地方。出于尊重，这条街上没怎么拍照。</p>
+
+<p>沿着威灵顿街往下走，走到阁麟街，右手边有个中药铺叫春回堂药行，头顶是半山扶梯，这是世界上最长的扶手电梯。</p>
+
+<p><img class="rcorners" src="/images/hongkong/day1-spring.jpg" width="600" height="400" /></p>
+
+<p>药行深处有个老中医坐在一张桌子后面，给人把脉，看舌苔，开方子，然后抓药。
+以前上海也有很多这样的药行，一股香香的中药味，一排排木抽屉装满药材，医师们用传统的手称给顾客抓药，现在这样的药行很少见了。
+门口有凉茶卖，五花茶，廿四味，和参茶三种，看到有晚辈陪着长者过来买茶喝，据说有些老者有着定期到药行喝凉茶的习惯，
+因为这些茶可以增强免疫力。我也买了一杯，只要 8 元，苦苦的，没放糖。</p>
+
+<p>继续往前走，走到吉士笠街，这里有很多大牌档。大牌档也是香港一大特色，不过据说政府想拆掉大牌档，却又不得民心。
+大牌档是港英政府发明的特许经营摊位，帮助穷人创造收入，因为颁发的牌照很大，所以叫大牌档。而现在却面临着两难的境地。
+不知道多年后来香港还能不能看到这些深入人心的大牌档。</p>
+
+<p><img class="rcorners" src="/images/hongkong/day1-paidang.jpg" width="600" height="400" /></p>
+
+<p>走进嘉咸街，嘉咸街上都是卖菜和水果的，顺着街走，会走到结志街。沿着结志街走，留意左边有个小弄堂，叫百子里。
+里面是个小花园，很安静，被周围的楼所包围，会有老人在下棋。</p>
+
+<p><img class="rcorners" src="/images/hongkong/day1-baizili.jpg" width="600" height="400" /></p>
+
+<p>穿过百子里，走向鸭巴甸街，鸭巴甸街过去是作为界限存在的，街的左边是唐人区，右边是英国人区。
+而现在，这里是卖家俬的聚集地，路很陡，慢慢走。</p>
+
+<p><img class="rcorners" src="/images/hongkong/day1-aba.jpg" width="600" height="400" /></p>
+
+<p>看到中区街坊福利会，然后左转，进入歌赋街。这条街以前是工业区，现在改造成新概念区，有点类似高雄的驳二艺术特区。
+走不远，左手边便是美伦街，会看到一排石梯，街口有个大牌档，番茄蛋汤面是她家的特色，这里也是 TVB 钟爱的取景地之一。</p>
+
+<p><img class="rcorners" src="/images/hongkong/day1-meilun.jpg" width="600" height="400" /></p>
+
+<p>美伦街走到头就是荷里活道，右转，沿着荷里活道走，左手边就能看到好多榕树。这些榕树大多超过一百多岁，
+树根暴露在空气中吸收水分，香港人把这叫做气根，是树生命力的象征。</p>
+
+<p><img class="rcorners" src="/images/hongkong/day1-tree.jpg" width="600" height="400" /></p>
+
+<p>荷里活道上有很多欧式餐厅，会所，酒吧，晚上应该会很热闹。走着走着，空气中就飘来了香的味道，文武庙到了。</p>
+
+<p><img class="rcorners" src="/images/hongkong/day1-wenwu.jpg" width="600" height="400" /></p>
+
+<p>文武庙香火很旺，供奉着代表诚实的文昌帝和代表正直的关帝，每当考试到来，前来膜拜的人就会很多，当日排队的人好多，
+我们没有进入。据说里面有中英文庙祝帮忙解签。</p>
+
+<p>文武庙对面是很斜的楼梯，叫楼梯街，行落去，就到了摩啰上街。</p>
+
+<p><img class="rcorners" src="/images/hongkong/day1-ladder.jpg" width="600" height="400" /></p>
+
+<p>摩啰上街也叫猫街，是个有名的古董市场。不过鱼龙混杂，
+到底能不能淘到真正的古董，就要看你的水平了。一路上有好多艺术品，钱币，李小龙画像，旧海报。</p>
+
+<p><img class="rcorners" src="/images/hongkong/day1-cat1.jpg" width="600" height="400" /></p>
+
+<p><img class="rcorners" src="/images/hongkong/day1-cat2.jpg" width="600" height="400" /></p>
+
+<p>接着经由乐古道，皇后大道中，急庇利街，最后来到苏杭街。很早之前，香港有很多人做批发商起家，后来他们的仔女继承家族的产业，
+因此会看到很多批发商一条街，苏杭街也是其中之一。有些批发商做出了口碑，生意会非常好，比如这条街上的兆成行有限公司，卖精油的，
+据说他们家的精油是香港最好的，连国外的大厂商也从他们家进口原材料。</p>
+
+<p><img class="rcorners" src="/images/hongkong/day1-shiu.jpg" width="600" height="400" /></p>
+
+<p>最后沿着摩利臣街走到德辅道，看到一个红砖建筑物，那是西港城，在绕了一个大圈之后，我们又回到了繁华的中环。</p>
+
+<p><img class="rcorners" src="/images/hongkong/day1-xigang.jpg" width="600" height="400" /></p>
+
+<p>可以在德辅道的车站坐巴士去恒生银行总部，因为那里是半山扶梯的起点。</p>
+
+<p><img class="rcorners" src="/images/hongkong/day1-banshan.jpg" width="600" height="400" /></p>
+
+<p>半山扶梯真是利民工程啊，省了好多体力，看着身边的建筑物慢慢远去，让人想起《重庆森领》。
+去半山扶梯要注意时间段，上午十点之前扶梯只下不上，因为山上的居民要下山上班。</p>
+
+<p><img class="rcorners" src="/images/hongkong/day1-elevator1.jpg" width="600" height="400" /></p>
+
+<p><img class="rcorners" src="/images/hongkong/day1-elevator2.jpg" width="600" height="400" /></p>
+
+<p>扶梯是分段的，根据目的地自行下扶梯，可以在分段的地方驻足休息，眺望山下。</p>
+
+<p><img class="rcorners" src="/images/hongkong/day1-elevator3.jpg" width="400" height="600" /></p>
+
+<p>到达扶梯的终点干德道，回头望下。</p>
+
+<p><img class="rcorners" src="/images/hongkong/day1-elevator4.jpg" width="400" height="600" /></p>
+
+<p>顺着干德道一直走，偶然途径一个动植物园，参天的大树，还看到了猩猩，算是旅途中的一个惊喜。</p>
+
+<h2 id="day-2">Day 2</h2>
+
+<p>整个香港除了九龙，新界，港岛，还由很多离岛组成，南丫岛就是其中一个，也是今天的目的地。</p>
+
+<p>去南丫岛需要坐船，码头在中环 4 号码头，有榕树湾和索苦湾两个方向，皆可。行程要 45 分钟左右，我们去的时候风浪比较大，
+颠簸得蛮厉害，有点晕船，但是沿途风景还是不错的。</p>
+
+<p>南丫岛是个渔村，给人的第一感觉是静谧，环境也很好。岛上没用机动车，交通就是自行车。</p>
+
+<p><img class="rcorners" src="/images/hongkong/day2-lamma.jpg" width="600" height="400" /></p>
+
+<p>我们到达的是榕树湾，会看到这个标志，向左走是索苦湾方向，向右走是去榕树湾吃海鲜，我们毅然决然的选择向左走。</p>
+
+<p><img class="rcorners" src="/images/hongkong/day2-lamma2.jpg" width="600" height="400" /></p>
+
+<p>这条路的游客很少，可以说几乎没有，走在丛林小道上有点世外桃源的感觉。</p>
+
+<p><img class="rcorners" src="/images/hongkong/day2-avenue.jpg" width="600" height="400" /></p>
+
+<p>顺着这条道走吧，沿途会经过海滩，会需要爬山，会走进一个小村庄，会看到原住民住所遗址。
+我们以为很快就会走到终点，结果耗时四小时，走山路的时候都快绝望了，感觉怎么都走不到头，想回头又太晚了。
+当时算是明白了为什么会叫索苦湾了。在经过一个小村庄时，路上突然杀出一只大狗，凶巴巴地看着我们，发出低吼，
+挡住我们前进的路，由于路上没有其他游客，不敢正面交锋，双方一动不动对峙了 15 分钟！！后来认怂，返回村庄找救兵，
+遇到一个好心的奶奶，她说带我们过去。结果那只大狗认识奶奶，远远地看到奶奶，居然吓得溜走了，这狗也太没出息了。
+别过奶奶，我们继续走，但心里有了阴影，听到远处狗吠就吓得不行，耽误了很多时间，不过回头想想还是蛮有趣的。</p>
+
+<p><img class="rcorners" src="/images/hongkong/day2-suoku1.jpg" width="600" height="400" /></p>
+
+<p><img class="rcorners" src="/images/hongkong/day2-suoku2.jpg" width="600" height="400" /></p>
+
+<p><img class="rcorners" src="/images/hongkong/day2-suoku3.jpg" width="600" height="400" /></p>
+
+<p>沙滩上发现狗的脚印，吓坏了。</p>
+
+<p><img class="rcorners" src="/images/hongkong/day2-footprint.jpg" width="600" height="400" /></p>
+
+<p>不知通向何处的山路。</p>
+
+<p><img class="rcorners" src="/images/hongkong/day2-suoku4.jpg" width="600" height="400" /></p>
+
+<p>发现一对菠萝。</p>
+
+<p><img class="rcorners" src="/images/hongkong/day2-suoku5.jpg" width="600" height="400" /></p>
+
+<p>南丫岛标志性建筑。</p>
+
+<p><img class="rcorners" src="/images/hongkong/day2-suoku6.jpg" width="600" height="400" /></p>
+
+<p>索苦湾走到尽头是榕树湾，人一下子多起来，路上的狗也不显得可怕了。
+岛上的人彼此都认识，都会互相打招呼，聊天。准备坐船回去的时候，正好遇到学生放学回来，他们白天在市区上学，晚上回南丫岛，
+虽然每天来回花上一个多小时在路上，但是住在这样的世外桃源真的是不错的选择。</p>
+
+<p><img class="rcorners" src="/images/hongkong/day2-suoku8.jpg" width="600" height="400" /></p>
+
+<h2 id="day-3">Day 3</h2>
+
+<p>今天行程比较随意，去浅水湾和赤柱逛逛。</p>
+
+<p>浅水湾附近很多豪宅。</p>
+
+<p><img class="rcorners" src="/images/hongkong/day3-qianshuiwan.jpg" width="600" height="400" /></p>
+
+<p>赤柱市集。</p>
+
+<p><img class="rcorners" src="/images/hongkong/day3-chizhu.jpg" width="600" height="400" /></p>
+
+<p>赤柱的水很干净，远处是美丽楼。</p>
+
+<p><img class="rcorners" src="/images/hongkong/day3-creek.jpg" width="600" height="400" /></p>
+
+<p><img class="rcorners" src="/images/hongkong/day3-meili.jpg" width="600" height="400" /></p>
+
+<h2 id="day-4">Day 4</h2>
+
+<p>从没吃过鸡蛋仔，试试看。</p>
+
+<p><img class="rcorners" src="/images/hongkong/day4-egg.jpg" width="600" height="400" /></p>
+
+<p>路过油麻地警署。</p>
+
+<p><img class="rcorners" src="/images/hongkong/day4-police.jpg" width="600" height="400" /></p>
+
+<p>去机场可以坐 A21 路电车，价格便宜，还可以看沿途风景。
+在车站问路，遇到很热心的阿姨，上车后还向我们挥手告别，在此记录一下。</p>
+
+<p>飞机起飞了，Goodbye Hongkong, See you.</p>
+
+<h2 id="section">后记</h2>
+
+<p>在这次旅行之前，旺角爆发了骚乱，大陆和香港的关系也很紧张，港人对内地游客的态度有些敌对。</p>
+
+<p>有朋友问我，这么乱你还去啊。其实香港人大部分都是很有礼貌，待人友善的，而且他们比我们更有自尊。</p>
+
+<p>所谓己所不欲，勿施于人，在希望得到别人尊重的同时，也请端正自身的态度。</p>
+
+<p>香港，在某些人看来，只是一个免税港，购物天堂，但在一些人心里，她是一个家园，一份感情，一段历史。</p>
+
 </div>
   
   
@@ -488,8 +871,6 @@ ethtool --change eth0 autoneg off speed 100 duplex full 设置无线网卡速率
     </article>
   
   <div class="pagination">
-    
-      <a class="prev" href="/posts/2">&larr; Older</a>
     
     <a href="/blog/archives">Blog Archives</a>
     
@@ -559,23 +940,19 @@ ethtool --change eth0 autoneg off speed 100 duplex full 设置无线网卡速率
   <ul id="recent_posts">
     
       <li class="post">
-        <a href="/blog/2017/08/19/command-kungfu-network/">有趣的命令行（之网络）</a>
+        <a href="/blog/2017/08/06/browse-log-by-highlight/">在终端下分析日志文件</a>
       </li>
     
       <li class="post">
-        <a href="/blog/2017/08/19/command-kungfu-info/">有趣的命令行（之系统信息）</a>
+        <a href="/blog/2016/09/14/ssh/">SSH Reverse Tunnel （反向通道）</a>
       </li>
     
       <li class="post">
-        <a href="/blog/2017/08/19/command-kungfu-debug/">有趣的命令行（之调试）</a>
+        <a href="/blog/2016/08/24/emacs-python-env/">使用 Emacs 编写 Python 脚本</a>
       </li>
     
       <li class="post">
-        <a href="/blog/2017/08/19/command-kungfu-file/">有趣的命令行（之文件处理）</a>
-      </li>
-    
-      <li class="post">
-        <a href="/blog/2017/08/19/command-kungfu-text/">有趣的命令行（之文本处理）</a>
+        <a href="/blog/2016/06/25/hongkong-trip-2016/">HeartWalk Hongkong</a>
       </li>
     
   </ul>
@@ -585,7 +962,7 @@ ethtool --change eth0 autoneg off speed 100 duplex full 设置无线网卡速率
   <ul id="categories">
     <li class='category'><a href='/blog/categories/emacs/'>emacs (1)</a></li>
 <li class='category'><a href='/blog/categories/other/'>other (1)</a></li>
-<li class='category'><a href='/blog/categories/utils/'>utils (8)</a></li>
+<li class='category'><a href='/blog/categories/utils/'>utils (2)</a></li>
 
   </ul>
 </section>
